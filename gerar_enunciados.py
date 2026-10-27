@@ -1,7 +1,7 @@
 # Gera enunciados.json com o enunciado de cada exercício e o segundo em que começa a resolução.
 #
 # Preparação (uma vez):
-#   python -m pip install youtube-transcript-api
+#   python -m pip install yt-dlp
 #   Chave gratuita em aistudio.google.com, e no Prompt de Comando:
 #     set GEMINI_KEY=SUA_CHAVE
 #     set GEMINI_MODEL=gemini-flash-latest
@@ -12,7 +12,7 @@
 # Pode rodar quantas vezes quiser: os exercícios já prontos são pulados.
 # Se o YouTube bloquear temporariamente, o script para sozinho e salva o progresso.
 import json, os, random, re, sys, time, urllib.request, urllib.error
-from youtube_transcript_api import YouTubeTranscriptApi
+import yt_dlp
 
 KEY = os.environ.get("GEMINI_KEY", "").strip()
 MODEL = os.environ.get("GEMINI_MODEL", "gemini-flash-latest")
@@ -34,8 +34,6 @@ out = {}
 if os.path.exists(SAIDA):
     out = json.load(open(SAIDA, encoding="utf-8"))
 
-api = YouTubeTranscriptApi()
-
 PROMPT = """Você recebe a transcrição, com tempos em segundos, de um vídeo de exercício de Python do Curso em Vídeo.
 
 Tarefas:
@@ -50,16 +48,34 @@ Transcrição:
 __TRECHO__"""
 
 
+def _baixar_trilha(t):
+    """Lê uma legenda no formato json3 do YouTube e devolve [{start, text}]."""
+    raw = urllib.request.urlopen(t["url"], timeout=60).read()
+    segs = []
+    for e in json.loads(raw).get("events", []):
+        txt = "".join(x.get("utf8", "") for x in e.get("segs", []) or []).strip()
+        if txt:
+            segs.append({"start": (e.get("tStartMs") or 0) / 1000, "text": txt})
+    return segs
+
+
 def legenda(vid):
-    """Tenta português/inglês; se não houver, pega qualquer legenda disponível."""
-    try:
-        return api.fetch(vid, languages=["pt", "pt-BR", "en"]).to_raw_data()
-    except Exception:
-        pass
-    lista = api.list(vid)
-    for t in lista:
+    """Pega a legenda (manual ou automática), preferindo português; se não houver, qualquer idioma."""
+    url = "https://www.youtube.com/watch?v=" + vid
+    with yt_dlp.YoutubeDL({"quiet": True, "no_warnings": True, "skip_download": True}) as ydl:
+        info = ydl.extract_info(url, download=False)
+    candidatas = []
+    for fonte in ("subtitles", "automatic_captions"):
+        for lang, trilhas in (info.get(fonte) or {}).items():
+            for t in trilhas:
+                if t.get("ext") == "json3":
+                    prioridade = 0 if lang.lower().startswith("pt") else 1
+                    candidatas.append((prioridade, t))
+    for _, t in sorted(candidatas, key=lambda x: x[0]):
         try:
-            return t.fetch().to_raw_data()
+            segs = _baixar_trilha(t)
+            if segs:
+                return segs
         except Exception:
             continue
     raise RuntimeError("sem legenda")
