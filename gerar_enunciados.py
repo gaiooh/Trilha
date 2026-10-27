@@ -48,37 +48,41 @@ Transcrição:
 __TRECHO__"""
 
 
-def _baixar_trilha(t):
-    """Lê uma legenda no formato json3 do YouTube e devolve [{start, text}]."""
-    raw = urllib.request.urlopen(t["url"], timeout=60).read()
+def legenda(vid):
+    """Baixa a legenda com o próprio yt-dlp (com tempo limite), preferindo português."""
+    pasta = "legendas_tmp"
+    os.makedirs(pasta, exist_ok=True)
+    url = "https://www.youtube.com/watch?v=" + vid
+    opcoes = {
+        "quiet": True,
+        "no_warnings": True,
+        "skip_download": True,
+        "writesubtitles": True,
+        "writeautomaticsub": True,
+        "subtitleslangs": ["pt", "pt-BR", "en"],
+        "subtitlesformat": "json3",
+        "outtmpl": os.path.join(pasta, "%(id)s.%(ext)s"),
+        "socket_timeout": 30,
+        "retries": 3,
+    }
+    with yt_dlp.YoutubeDL(opcoes) as ydl:
+        ydl.download([url])
+    arquivos = sorted(
+        f for f in os.listdir(pasta)
+        if f.startswith(vid + ".") and f.endswith(".json3")
+    )
+    if not arquivos:
+        raise RuntimeError("sem legenda")
+    with open(os.path.join(pasta, arquivos[0]), encoding="utf-8") as f:
+        dados = json.load(f)
     segs = []
-    for e in json.loads(raw).get("events", []):
-        txt = "".join(x.get("utf8", "") for x in e.get("segs", []) or []).strip()
+    for e in dados.get("events", []):
+        txt = "".join(x.get("utf8", "") for x in (e.get("segs") or [])).strip()
         if txt:
             segs.append({"start": (e.get("tStartMs") or 0) / 1000, "text": txt})
+    if not segs:
+        raise RuntimeError("sem legenda")
     return segs
-
-
-def legenda(vid):
-    """Pega a legenda (manual ou automática), preferindo português; se não houver, qualquer idioma."""
-    url = "https://www.youtube.com/watch?v=" + vid
-    with yt_dlp.YoutubeDL({"quiet": True, "no_warnings": True, "skip_download": True}) as ydl:
-        info = ydl.extract_info(url, download=False)
-    candidatas = []
-    for fonte in ("subtitles", "automatic_captions"):
-        for lang, trilhas in (info.get(fonte) or {}).items():
-            for t in trilhas:
-                if t.get("ext") == "json3":
-                    prioridade = 0 if lang.lower().startswith("pt") else 1
-                    candidatas.append((prioridade, t))
-    for _, t in sorted(candidatas, key=lambda x: x[0]):
-        try:
-            segs = _baixar_trilha(t)
-            if segs:
-                return segs
-        except Exception:
-            continue
-    raise RuntimeError("sem legenda")
 
 
 def gemini(texto):
