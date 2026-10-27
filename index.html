@@ -1,437 +1,1375 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Biscotteca — Cookies Artesanais</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,900&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Trilha de Cursos Dev</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=DM+Sans:wght@400;500;700&display=swap">
 <style>
-  :root{
-    --brown:#8B6A3E;
-    --brown-dark:#4A3526;
-    --beige:#E9D9C0;
-    --cream:#FBF3E7;
-    --white:#FFFFFF;
-    --black:#1E1E1E;
-    --pink:#F7D6DD;
+/* Duas telas na mesma página: a vitrine de cursos e a grade de aulas de Python. */
+:root {
+  --bg: #15102a;
+  --panel: #211a3d;
+  --panel-2: #2a2250;
+  --ink: #f4f1ff;
+  --muted: #aca3cf;
+  --accent: #a68cff;
+  --accent-ink: #15102a;
+  --hot: #ff7a8a;
+  --line: #3a3064;
+  --font-display: "Fraunces", Georgia, "Times New Roman", serif;
+  --font-body: "DM Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme="dark"]) {
+    --bg: #f5f2ff;
+    --panel: #ffffff;
+    --panel-2: #ebe5ff;
+    --ink: #1d1638;
+    --muted: #5f5780;
+    --accent: #5b3fd6;
+    --accent-ink: #ffffff;
+    --hot: #d6344a;
+    --line: #d9d0f5;
+    color-scheme: light;
   }
-  *{margin:0;padding:0;box-sizing:border-box;}
-  html{scroll-behavior:smooth;}
-  body{
-    font-family:'Poppins',sans-serif;
-    color:var(--black);
-    background:var(--cream);
-    overflow-x:hidden;
-  }
-  h1,h2,h3{font-family:'Fraunces',serif;}
-  .script{font-family:'Pacifico',cursive; font-weight:400;}
-  a{text-decoration:none;color:inherit;}
-  img{max-width:100%;display:block;}
-  .wrap{max-width:1180px;margin:0 auto;padding:0 28px;}
+}
+:root[data-theme="light"] {
+  --bg: #f5f2ff;
+  --panel: #ffffff;
+  --panel-2: #ebe5ff;
+  --ink: #1d1638;
+  --muted: #5f5780;
+  --accent: #5b3fd6;
+  --accent-ink: #ffffff;
+  --hot: #d6344a;
+  --line: #d9d0f5;
+  color-scheme: light;
+}
 
-  /* ---------- crumbs bg ---------- */
-  .crumb{position:absolute;border-radius:50%;background:var(--brown);opacity:.15;}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 1rem;
+  line-height: 1.55;
+  padding-block: 0 4rem;
+}
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0 0 auto;
+  height: env(safe-area-inset-top, 0px);
+  z-index: 10;
+  background: var(--bg);
+}
+.inner {
+  max-width: 72rem;
+  margin: 0 auto;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+a { color: inherit; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+[hidden] { display: none !important; }
 
-  /* ---------- header ---------- */
-  header{
-    position:sticky;top:0;z-index:50;
-    background:var(--cream);
-    border-bottom:2px solid var(--black);
-  }
-  .nav{display:flex;align-items:center;justify-content:space-between;padding:14px 28px;max-width:1180px;margin:0 auto;}
-  .brand{display:flex;align-items:center;gap:10px;}
-  .brand img{height:52px;width:52px;object-fit:contain;}
-  .brand span{font-family:'Pacifico',cursive;font-size:1.5rem;color:var(--brown-dark);}
-  .navlinks{display:flex;gap:34px;font-weight:600;font-size:.95rem;}
-  .navlinks a{position:relative;padding:4px 0;}
-  .navlinks a:hover{color:var(--brown);}
-  .btn-wpp{
-    background:var(--brown-dark);color:var(--white);
-    padding:11px 22px;border-radius:40px;font-weight:700;font-size:.9rem;
-    display:inline-flex;align-items:center;gap:8px;
-    border:2px solid var(--black);
-    transition:transform .15s ease, background .15s ease;
-    white-space:nowrap;
-  }
-  .btn-wpp:hover{background:var(--brown);transform:translateY(-2px);}
-  .navlinks-mobile-hide{display:flex;}
-  @media(max-width:820px){ .navlinks{display:none;} }
+.nav {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1rem 2rem;
+  padding-block: 1.25rem;
+}
+.logo {
+  display: flex;
+  align-items: center;
+  gap: .55rem;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1.35rem;
+  text-decoration: none;
+  background: none;
+  border: 0;
+  color: var(--ink);
+  cursor: pointer;
+  padding: 0;
+}
+.logo-mark {
+  width: 1.8rem;
+  height: 1.8rem;
+  border-radius: 8px;
+  background: var(--accent);
+  display: grid;
+  place-items: center;
+  color: var(--accent-ink);
+  font-size: .9rem;
+}
+.links { display: flex; flex-wrap: wrap; gap: .4rem 1.1rem; margin-left: auto; font-size: .95rem; }
+.links a { text-decoration: none; color: var(--muted); padding: .35rem 0; }
+.links a:hover { color: var(--ink); }
 
-  /* ---------- hero ---------- */
-  .hero{
-    position:relative;
-    background:linear-gradient(160deg,var(--beige) 0%, var(--cream) 55%);
-    padding:70px 0 130px;
-    overflow:hidden;
-  }
-  .hero .wrap{display:grid;grid-template-columns:1.1fr .9fr;gap:40px;align-items:center;}
-  .eyebrow{
-    display:inline-flex;align-items:center;gap:8px;
-    background:var(--pink);color:var(--brown-dark);
-    padding:7px 16px;border-radius:40px;font-weight:700;font-size:.8rem;
-    letter-spacing:.03em;text-transform:uppercase;border:2px solid var(--black);
-    margin-bottom:22px;
-  }
-  .hero h1{
-    font-size:clamp(2.6rem,5.4vw,4.4rem);
-    line-height:1.02;font-weight:900;color:var(--brown-dark);
-    letter-spacing:-.01em;
-  }
-  .hero h1 .script{
-    display:block;color:var(--brown);font-size:1.15em;line-height:1;margin-top:6px;
-  }
-  .hero p.lead{
-    margin-top:22px;font-size:1.08rem;line-height:1.6;color:var(--black);max-width:460px;
-  }
-  .hero-ctas{display:flex;gap:16px;margin-top:32px;flex-wrap:wrap;}
-  .btn-primary{
-    background:var(--brown-dark);color:var(--white);padding:16px 30px;border-radius:50px;
-    font-weight:700;border:2px solid var(--black);display:inline-flex;gap:10px;align-items:center;
-    transition:transform .15s ease;
-  }
-  .btn-primary:hover{transform:translateY(-3px) rotate(-1deg);}
-  .btn-secondary{
-    padding:16px 26px;border-radius:50px;font-weight:700;border:2px solid var(--black);
-    color:var(--brown-dark);
-  }
-  .hero-art{position:relative;display:flex;align-items:center;justify-content:center;}
-  .cookie-hero{width:min(380px,90%);position:relative;animation:float 5s ease-in-out infinite;}
-  @keyframes float{0%,100%{transform:translateY(0) rotate(-3deg);}50%{transform:translateY(-14px) rotate(2deg);}}
-  .crumb-fly{position:absolute;animation:fly 3.4s ease-in-out infinite;}
-  @keyframes fly{0%,100%{transform:translate(0,0) rotate(0deg);}50%{transform:translate(18px,-24px) rotate(30deg);}}
+/* vitrine */
+.hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
+  gap: 2rem;
+  align-items: center;
+  padding-block: 2.5rem 2rem;
+}
+.hero h1 {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(2.4rem, 6.2vw, 4rem);
+  line-height: 1.05;
+  letter-spacing: -.015em;
+  text-wrap: balance;
+}
+.hero h1 em { font-style: normal; color: var(--accent); }
+.hero p { margin: 1.1rem 0 0; max-width: 34rem; color: var(--muted); font-size: 1.05rem; }
 
-  /* scalloped bite divider */
-  .bite-divider{display:block;width:100%;line-height:0;margin-top:-2px;}
-  .bite-divider svg{width:100%;height:64px;display:block;}
+.search {
+  margin-top: 1.75rem;
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: .35rem .35rem .35rem 1.1rem;
+  max-width: 34rem;
+}
+.search input {
+  flex: 1 1 auto;
+  min-width: 0;
+  background: transparent;
+  border: 0;
+  color: var(--ink);
+  font: 500 1rem/1.2 var(--font-body);
+  padding: .6rem 0;
+}
+.search input::placeholder { color: var(--muted); }
+.search input:focus { outline: none; }
+.btn-pill {
+  font: 700 .95rem/1 var(--font-body);
+  color: var(--accent-ink);
+  background: var(--accent);
+  border: 0;
+  border-radius: 999px;
+  padding: .85rem 1.25rem;
+  min-height: 2.8rem;
+  cursor: pointer;
+  white-space: nowrap;
+}
 
-  /* ---------- marquee strip ---------- */
-  .marquee-strip{
-    background:var(--brown-dark);color:var(--beige);
-    overflow:hidden;white-space:nowrap;border-top:2px solid var(--black);border-bottom:2px solid var(--black);
-    padding:14px 0;
-  }
-  .marquee-strip .track{display:inline-block;animation:scroll 22s linear infinite;font-weight:700;letter-spacing:.02em;}
-  .marquee-strip span{margin:0 26px;font-size:.95rem;}
-  @keyframes scroll{from{transform:translateX(0);}to{transform:translateX(-50%);}}
+.stage {
+  position: relative;
+  min-height: 19rem;
+  border-radius: 28px;
+  background: linear-gradient(160deg, var(--panel-2), var(--panel));
+  border: 1px solid var(--line);
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  overflow: hidden;
+}
+.stage-top { display: flex; justify-content: space-between; align-items: center; font-size: .85rem; color: var(--muted); }
+.stage-big { font-family: var(--font-display); font-size: 2.6rem; line-height: 1; margin: .6rem 0 .25rem; }
+.stage-big span { color: var(--accent); font-size: 1.2rem; }
+.stage-bar { height: .55rem; background: var(--line); border-radius: 999px; overflow: hidden; }
+.stage-bar i { display: block; height: 100%; width: 0; background: var(--accent); border-radius: 999px; }
+.stage-list { display: grid; gap: .45rem; margin-top: 1rem; font-size: .9rem; }
+.stage-list div { display: flex; justify-content: space-between; gap: .75rem; padding: .5rem .7rem; background: var(--bg); border-radius: 12px; }
+.stage-list b { font-weight: 500; }
+.stage-list span { color: var(--muted); white-space: nowrap; }
+.dot { display: inline-block; width: .55rem; height: .55rem; border-radius: 50%; background: var(--hot); margin-right: .45rem; }
 
-  /* ---------- benefits ---------- */
-  .benefits{padding:80px 0 60px;}
-  .benefits-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:28px;margin-top:44px;}
-  .benefit-card{
-    background:var(--white);border:2px solid var(--black);border-radius:22px;
-    padding:30px 26px;box-shadow:6px 6px 0 var(--brown);
-    transition:transform .15s ease, box-shadow .15s ease;
-  }
-  .benefit-card:hover{transform:translate(-3px,-3px);box-shadow:9px 9px 0 var(--brown);}
-  .benefit-icon{
-    width:54px;height:54px;border-radius:50%;background:var(--pink);
-    display:flex;align-items:center;justify-content:center;font-size:1.5rem;margin-bottom:16px;
-    border:2px solid var(--black);
-  }
-  .benefit-card h3{font-size:1.15rem;margin-bottom:8px;color:var(--brown-dark);}
-  .benefit-card p{font-size:.92rem;line-height:1.55;color:#4a4238;}
-  .section-head{text-align:center;max-width:620px;margin:0 auto;}
-  .section-head .eyebrow{margin-bottom:16px;}
-  .section-head h2{font-size:clamp(2rem,4vw,2.8rem);color:var(--brown-dark);}
-  .section-head p{margin-top:14px;color:#5a4f42;font-size:1.02rem;}
+.sources {
+  margin-top: 1.25rem;
+  padding-block: 1rem;
+  border-block: 1px solid var(--line);
+  display: flex;
+  flex-wrap: wrap;
+  gap: .5rem 1.6rem;
+  align-items: center;
+  color: var(--muted);
+  font-size: .9rem;
+}
+.sources strong { color: var(--ink); font-weight: 500; margin-right: .3rem; }
 
-  @media(max-width:820px){ .benefits-grid{grid-template-columns:1fr;} .hero .wrap{grid-template-columns:1fr;} .hero-art{order:-1;} }
+.section-head {
+  margin-top: 3rem;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: end;
+  justify-content: space-between;
+  gap: 1rem;
+}
+.section-head h2 {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(1.8rem, 4vw, 2.5rem);
+  line-height: 1.1;
+}
+.section-head h2 em { font-style: normal; color: var(--accent); }
+.tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .3rem;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: .3rem;
+}
+.tab {
+  font: 500 .9rem/1 var(--font-body);
+  color: var(--muted);
+  background: transparent;
+  border: 0;
+  border-radius: 999px;
+  padding: .65rem 1rem;
+  min-height: 2.5rem;
+  cursor: pointer;
+}
+.tab[aria-selected="true"] { background: var(--accent); color: var(--accent-ink); }
 
-  /* ---------- menu ---------- */
-  .menu{background:var(--beige);padding:90px 0 100px;position:relative;}
-  .menu-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:26px;margin-top:50px;}
-  .menu-card{
-    background:var(--white);border:2px solid var(--black);border-radius:20px;
-    overflow:hidden;display:flex;flex-direction:column;
-    box-shadow:6px 6px 0 var(--brown-dark);
-    transition:transform .18s ease, box-shadow .18s ease;
-  }
-  .menu-card:hover{transform:translateY(-6px);box-shadow:10px 12px 0 var(--brown-dark);}
-  .menu-card-top{
-    padding:22px 24px 10px;display:flex;align-items:flex-start;justify-content:space-between;gap:10px;
-  }
-  .menu-num{font-family:'Fraunces',serif;font-weight:900;font-size:2.6rem;color:var(--beige);
-    -webkit-text-stroke:2px var(--brown-dark);line-height:1;}
-  .menu-name{font-family:'Fraunces',serif;font-weight:700;font-size:1.3rem;color:var(--brown-dark);text-align:right;}
-  .menu-desc{padding:0 24px;font-size:.88rem;line-height:1.55;color:#544a3d;flex:1;}
-  .menu-tags{display:flex;gap:10px;flex-wrap:wrap;padding:16px 24px 0;}
-  .menu-tags span{
-    font-size:.68rem;font-weight:700;letter-spacing:.03em;text-transform:uppercase;
-    background:var(--cream);border:1.5px solid var(--brown);color:var(--brown-dark);
-    padding:5px 10px;border-radius:20px;
-  }
-  .menu-foot{
-    margin-top:18px;padding:16px 24px;border-top:2px dashed var(--beige);
-    display:flex;align-items:center;justify-content:space-between;
-  }
-  .menu-price{font-weight:800;font-size:1.15rem;color:var(--brown-dark);}
-  .menu-order{
-    background:var(--brown-dark);color:var(--white);border-radius:40px;
-    padding:9px 16px;font-size:.82rem;font-weight:700;display:inline-flex;align-items:center;gap:6px;
-    border:2px solid var(--black);
-  }
-  .menu-order:hover{background:var(--brown);}
-  @media(max-width:980px){ .menu-grid{grid-template-columns:1fr 1fr;} }
-  @media(max-width:640px){ .menu-grid{grid-template-columns:1fr;} }
+.grid {
+  margin-top: 1.5rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 18rem), 1fr));
+  gap: 1.1rem;
+}
+.card {
+  display: flex;
+  flex-direction: column;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 22px;
+  overflow: hidden;
+  min-width: 0;
+}
+.card-art {
+  height: 9.5rem;
+  background: linear-gradient(135deg, var(--panel-2), var(--accent));
+  display: flex;
+  align-items: flex-end;
+  padding: .9rem 1rem;
+}
+.card-art .art-tag {
+  font-family: var(--font-display);
+  font-size: 1.9rem;
+  line-height: 1;
+  color: var(--accent-ink);
+}
+.card-body { padding: 1rem 1.1rem 1.1rem; display: flex; flex-direction: column; gap: .65rem; flex: 1; }
+.meta { display: flex; justify-content: space-between; align-items: center; gap: .5rem; font-size: .8rem; color: var(--muted); }
+.pill {
+  font-size: .72rem;
+  font-weight: 500;
+  padding: .3rem .6rem;
+  border-radius: 999px;
+  background: var(--panel-2);
+  color: var(--accent);
+  white-space: nowrap;
+}
+.card h3 { margin: 0; font-size: 1.12rem; line-height: 1.3; font-weight: 700; text-wrap: balance; }
+.card p { margin: 0; color: var(--muted); font-size: .92rem; }
+.card-foot {
+  margin-top: auto;
+  padding-top: .8rem;
+  border-top: 1px solid var(--line);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: .5rem;
+  font-size: .85rem;
+  color: var(--muted);
+}
+.card-foot a, .card-foot button {
+  font: 700 .9rem/1.2 var(--font-body);
+  color: var(--accent);
+  background: none;
+  border: 0;
+  padding: .4rem 0;
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  white-space: nowrap;
+}
+.empty { margin-top: 1.5rem; color: var(--muted); }
 
-  /* ---------- about strip ---------- */
-  .about{padding:90px 0;}
-  .about .wrap{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center;}
-  .about-visual{
-    background:var(--pink);border:2px solid var(--black);border-radius:26px;
-    padding:44px;text-align:center;box-shadow:8px 8px 0 var(--brown);
-  }
-  .about-visual .script{font-size:2.4rem;color:var(--brown-dark);}
-  .about-visual p{margin-top:12px;font-size:.95rem;color:#5a4436;}
-  .about h2{font-size:clamp(1.8rem,3.6vw,2.5rem);color:var(--brown-dark);margin-bottom:18px;}
-  .about p{color:#4a4238;line-height:1.7;margin-bottom:14px;font-size:1rem;}
-  @media(max-width:820px){ .about .wrap{grid-template-columns:1fr;} }
+/* tela de Python */
+.back {
+  margin-top: 1.5rem;
+  font: 600 .9rem/1 var(--font-body);
+  color: var(--ink);
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: .7rem 1.1rem;
+  min-height: 2.6rem;
+  cursor: pointer;
+}
+.py-head { margin-top: 1.25rem; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: end; gap: 1rem; }
+.py-head h1 {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(2rem, 5vw, 3.2rem);
+  line-height: 1.05;
+  letter-spacing: -.01em;
+}
+.py-head h1 em { font-style: normal; color: var(--accent); }
+.py-head p { margin: .6rem 0 0; color: var(--muted); max-width: 38rem; }
+.py-count { font-family: var(--font-mono, ui-monospace, monospace); font-size: .85rem; color: var(--muted); white-space: nowrap; }
+.mundo-title {
+  margin: 2.5rem 0 .25rem;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1.5rem;
+  line-height: 1.2;
+}
+.mundo-sub { margin: 0 0 1rem; color: var(--muted); font-size: .9rem; }
 
-  /* ---------- CTA whatsapp band ---------- */
-  .cta-band{
-    background:var(--brown-dark);color:var(--cream);text-align:center;padding:70px 24px;
-    border-top:2px solid var(--black);border-bottom:2px solid var(--black);position:relative;overflow:hidden;
-  }
-  .cta-band h2{font-size:clamp(1.8rem,4vw,2.6rem);margin-bottom:14px;}
-  .cta-band .script{color:var(--pink);}
-  .cta-band p{opacity:.85;max-width:480px;margin:0 auto 30px;font-size:1rem;}
-  .cta-band .btn-primary{background:var(--pink);color:var(--brown-dark);border-color:var(--pink);}
-  .cta-band .btn-primary:hover{background:var(--white);}
+.squares {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 12.5rem), 1fr));
+  gap: .9rem;
+}
+.sq {
+  aspect-ratio: 1 / 1;
+  display: flex;
+  flex-direction: column;
+  gap: .45rem;
+  padding: 1rem;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 22px;
+  overflow: hidden;
+  min-width: 0;
+  text-align: left;
+  color: var(--ink);
+  font: inherit;
+  cursor: pointer;
+  position: relative;
+}
+.sq:hover { border-color: var(--accent); }
+.sq[aria-pressed="true"] { border-color: var(--accent); background: var(--panel-2); }
+.sq.is-done { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
+.sq.is-done .sq-desc, .sq.is-done .sq-time, .sq.is-done .sq-tag { color: var(--accent-ink); opacity: .85; }
+.sq-top { display: flex; justify-content: space-between; align-items: center; gap: .5rem; font-size: .75rem; }
+.sq-num { font-family: var(--font-display); font-size: 1.6rem; line-height: 1; }
+.sq-tag { color: var(--muted); font-size: .72rem; }
+.sq-title { margin: .2rem 0 0; font-size: .98rem; font-weight: 700; line-height: 1.25; text-wrap: balance; }
+.sq-desc {
+  margin: 0;
+  font-size: .82rem;
+  color: var(--muted);
+  line-height: 1.4;
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.sq-time { margin-top: auto; font-size: .75rem; color: var(--muted); }
+.sq-check {
+  position: absolute;
+  top: .8rem;
+  right: .8rem;
+  width: 1.3rem;
+  height: 1.3rem;
+  border-radius: 50%;
+  border: 1.5px solid var(--line);
+  display: grid;
+  place-items: center;
+  font-size: .7rem;
+}
+.sq.is-done .sq-check { background: var(--accent-ink); border-color: var(--accent-ink); color: var(--accent); }
 
-  /* ---------- footer ---------- */
-  footer{background:var(--pink);padding:60px 0 30px;}
-  .footer-grid{display:grid;grid-template-columns:1.3fr 1fr 1fr;gap:40px;}
-  .footer-brand{display:flex;align-items:center;gap:12px;margin-bottom:14px;}
-  .footer-brand img{height:48px;width:48px;}
-  .footer-brand span{font-family:'Pacifico',cursive;font-size:1.4rem;color:var(--brown-dark);}
-  footer p{color:#6b5644;font-size:.92rem;line-height:1.6;}
-  footer h4{font-size:.85rem;text-transform:uppercase;letter-spacing:.05em;color:var(--brown-dark);margin-bottom:14px;}
-  footer ul{list-style:none;}
-  footer li{margin-bottom:10px;font-size:.92rem;color:#6b5644;}
-  footer li a:hover{color:var(--brown-dark);text-decoration:underline;}
-  .footer-bottom{
-    margin-top:44px;padding-top:22px;border-top:2px solid rgba(30,30,30,.15);
-    display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;font-size:.82rem;color:#7a6553;
-  }
-  @media(max-width:820px){ .footer-grid{grid-template-columns:1fr;gap:26px;} }
+/* painel da aula selecionada */
+.detail {
+  margin-top: 1.5rem;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 22px;
+  padding: 1.25rem;
+  scroll-margin-top: 5rem;
+}
+.detail h2 { margin: 0 0 .25rem; font-family: var(--font-display); font-size: 1.6rem; line-height: 1.15; }
+.detail .learn { margin: .6rem 0 0; color: var(--ink); }
+.detail .learn b { color: var(--accent); font-weight: 700; }
+.detail ul { list-style: none; margin: 1rem 0 0; padding: 0; display: grid; gap: .4rem; }
+.detail li a {
+  display: flex;
+  justify-content: space-between;
+  gap: .75rem;
+  padding: .55rem .7rem;
+  background: var(--panel-2);
+  border-radius: 12px;
+  text-decoration: none;
+  font-size: .92rem;
+  min-height: 2.6rem;
+  align-items: center;
+}
+.detail li a:hover { text-decoration: underline; }
+.detail .dur { font-family: var(--font-mono, ui-monospace, monospace); font-size: .78rem; color: var(--muted); white-space: nowrap; }
+.detail .vt { min-width: 0; overflow-wrap: anywhere; }
+.detail .actions { margin-top: 1rem; display: flex; flex-wrap: wrap; gap: .6rem; align-items: center; }
+.btn {
+  font: 700 .92rem/1.2 var(--font-body);
+  min-height: 2.8rem;
+  padding: .7rem 1.1rem;
+  color: var(--accent-ink);
+  background: var(--accent);
+  border: 0;
+  border-radius: 999px;
+  cursor: pointer;
+}
+.btn[aria-pressed="true"] { background: var(--ink); color: var(--bg); }
+.detail .saved { font-size: .85rem; color: var(--muted); }
+.detail .player { margin-top: 1rem; aspect-ratio: 16 / 9; background: #000; border: 1px solid var(--line); border-radius: 14px; overflow: hidden; }
+.detail .player a.thumb { position: relative; display: block; width: 100%; height: 100%; text-decoration: none; color: #fff; }
+.detail .player a.thumb img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: .85; }
+.detail .player a.thumb:hover img { opacity: 1; }
+.detail .player .play {
+  position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);
+  width: 4.2rem; height: 4.2rem; border-radius: 50%;
+  display: grid; place-items: center;
+  background: rgba(255,255,255,.92); color: #111;
+  font-size: 1.5rem; padding-left: .3rem;
+  box-shadow: 0 0 24px rgba(166,140,255,.6);
+}
+.detail .player .cta {
+  position: absolute; left: .9rem; bottom: .9rem;
+  font: 600 .85rem var(--font-body);
+  background: var(--accent); color: var(--accent-ink);
+  padding: .45rem .8rem; border-radius: 10px;
+}
+.detail li { display: flex; align-items: stretch; gap: .5rem; }
+.detail .vid-pick {
+  flex: 1; min-width: 0;
+  display: flex; justify-content: space-between; align-items: center; gap: .75rem;
+  text-align: left;
+  font: 500 .92rem/1.3 var(--font-body);
+  color: var(--ink);
+  background: var(--panel-2);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: .6rem .8rem;
+  cursor: pointer;
+}
+.detail .vid-pick:hover { border-color: var(--accent); }
+.detail .vid-pick[aria-pressed="true"] { border-color: var(--accent); box-shadow: inset 0 0 0 1px var(--accent); }
+.detail .vid-pick .vt { min-width: 0; overflow-wrap: anywhere; }
+.detail a.ext {
+  flex: 0 0 auto;
+  display: grid; place-items: center;
+  padding: 0 .7rem;
+  color: var(--muted);
+  text-decoration: none;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  font-size: .95rem;
+}
+.detail a.ext:hover { color: var(--accent); border-color: var(--accent); text-decoration: none; }
+
+/* perfil: painel de status */
+.sys { margin-top: 1.5rem; display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 1rem; }
+.sys-card {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  padding: 1.1rem;
+  min-width: 0;
+  box-shadow: 0 0 0 1px rgba(166,140,255,.06), 0 0 28px rgba(166,140,255,.12);
+}
+.sys-card h2 { margin: 0 0 .9rem; font-size: .8rem; letter-spacing: .14em; text-transform: uppercase; color: var(--accent); font-weight: 700; }
+.c-status { grid-column: span 5; }
+.c-missoes { grid-column: span 7; }
+.c-habitos { grid-column: span 7; }
+.c-skills { grid-column: span 5; }
+.avatar-row { display: flex; gap: 1rem; align-items: center; }
+.avatar {
+  width: 4.2rem; height: 4.2rem; border-radius: 50%;
+  display: grid; place-items: center; flex: 0 0 auto;
+  background: linear-gradient(135deg, var(--accent), var(--panel-2));
+  color: var(--accent-ink);
+  font-family: var(--font-display); font-size: 1.8rem; font-weight: 700;
+  box-shadow: 0 0 22px rgba(166,140,255,.5);
+}
+.avatar { position: relative; overflow: hidden; cursor: pointer; }
+.avatar img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.avatar input { position: absolute; width: 1px; height: 1px; opacity: 0; pointer-events: none; }
+.avatar:focus-within { outline: 2px solid var(--accent-ink); outline-offset: 2px; }
+.who { min-width: 0; }
+.name-row { display: flex; align-items: center; gap: .45rem; }
+.who h3 { margin: 0; font-family: var(--font-display); font-size: 1.35rem; overflow-wrap: anywhere; }
+.pencil {
+  flex: 0 0 auto;
+  width: 1.9rem; height: 1.9rem;
+  display: grid; place-items: center;
+  padding: 0;
+  background: none;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  color: var(--muted);
+  font-size: .9rem; line-height: 1;
+  cursor: pointer;
+}
+.pencil:hover, .pencil:focus-visible { color: var(--accent); border-color: var(--accent); }
+.name-form { display: flex; gap: .4rem; margin-top: .4rem; }
+.name-form input {
+  flex: 1; min-width: 0;
+  font: inherit; font-size: .95rem;
+  color: var(--ink);
+  background: var(--panel-2);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: .4rem .6rem;
+}
+.name-form input:focus { outline: 2px solid var(--accent); outline-offset: 1px; }
+.name-form button {
+  font: 600 .85rem var(--font-body);
+  background: var(--accent); color: var(--accent-ink);
+  border: 0; border-radius: 10px;
+  padding: .4rem .8rem;
+  cursor: pointer;
+}
+.avatar-hint { display: block; margin-top: .3rem; font-size: .72rem; color: var(--muted); }
+.who p { margin: .15rem 0 0; color: var(--muted); font-size: .85rem; }
+.lvl { font-family: var(--font-display); font-size: 2.4rem; line-height: 1; color: var(--accent); text-align: right; }
+.lvl-lbl { display: block; text-align: right; font-size: .72rem; letter-spacing: .12em; color: var(--muted); }
+.xpbar { height: .7rem; background: var(--panel-2); border-radius: 999px; overflow: hidden; margin: .9rem 0 .35rem; }
+.xpbar i { display: block; height: 100%; width: 0; background: linear-gradient(90deg, var(--accent), var(--hot)); box-shadow: 0 0 12px var(--accent); }
+.xp-line { display: flex; justify-content: space-between; gap: .5rem; font-size: .8rem; color: var(--muted); font-family: ui-monospace, Consolas, monospace; }
+.stat { display: grid; grid-template-columns: 6.8rem minmax(0, 1fr) 4.6rem; gap: .6rem; align-items: center; font-size: .88rem; margin-top: .7rem; }
+.stat .bar { height: .45rem; background: var(--panel-2); border-radius: 999px; overflow: hidden; }
+.stat .bar i { display: block; height: 100%; width: 0; background: var(--accent); }
+.stat b { font-weight: 500; text-align: right; font-family: ui-monospace, Consolas, monospace; font-size: .78rem; color: var(--muted); }
+.mission {
+  width: 100%;
+  display: flex; justify-content: space-between; align-items: center; gap: .75rem;
+  text-align: left;
+  font: 500 .92rem/1.3 var(--font-body);
+  color: var(--ink);
+  background: var(--panel-2);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: .75rem .9rem;
+  min-height: 2.8rem;
+  cursor: pointer;
+  margin-top: .5rem;
+}
+.mission[aria-pressed="true"] { border-color: var(--accent); background: var(--accent); color: var(--accent-ink); }
+.mission .m-txt { display: flex; align-items: center; gap: .6rem; min-width: 0; }
+.mission small { font-family: ui-monospace, Consolas, monospace; font-size: .72rem; opacity: .85; white-space: nowrap; }
+.mission-box {
+  width: 1.2rem; height: 1.2rem; flex: 0 0 auto;
+  border: 1.5px solid currentColor; border-radius: 5px;
+  display: grid; place-items: center; font-size: .75rem; line-height: 1;
+}
+.mission[aria-pressed="true"] .mission-box { background: var(--accent-ink); border-color: var(--accent-ink); color: var(--accent); }
+.chart { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: .6rem; align-items: stretch; height: 10rem; margin-top: .5rem; }
+.chart > div { display: flex; flex-direction: column; justify-content: flex-end; min-width: 0; }
+.chart .col-bar { display: flex; flex-direction: column; justify-content: flex-end; flex: 1 1 auto; min-height: 0; }
+.chart i {
+  display: block; width: 100%; height: 0;
+  background: linear-gradient(180deg, var(--hot), var(--accent));
+  border-radius: 8px 8px 3px 3px;
+  box-shadow: 0 0 12px rgba(166,140,255,.4);
+}
+.chart span { margin-top: .4rem; font-size: .72rem; color: var(--muted); text-align: center; font-family: ui-monospace, Consolas, monospace; }
+.muted-note { font-size: .8rem; color: var(--muted); margin: .8rem 0 0; }
+.skill-row { display: flex; justify-content: space-between; gap: .5rem; font-size: .92rem; margin-top: .8rem; }
+.skill-row small { color: var(--muted); font-size: .8rem; }
+.skill-bar { height: .45rem; background: var(--panel-2); border-radius: 999px; overflow: hidden; margin-top: .4rem; }
+.skill-bar i { display: block; height: 100%; width: 0; background: linear-gradient(90deg, var(--accent), var(--hot)); }
+@media (max-width: 760px) {
+  .sys { grid-template-columns: 1fr; }
+  .c-status, .c-missoes, .c-habitos, .c-skills { grid-column: auto; }
+  .stat { grid-template-columns: 5.6rem minmax(0, 1fr) 4rem; }
+}
+
+footer {
+  margin-top: 3.5rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--line);
+  color: var(--muted);
+  font-size: .85rem;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: .5rem 1rem;
+}
+
+@media (max-width: 760px) {
+  .hero { grid-template-columns: 1fr; padding-top: 1.5rem; }
+  .stage { min-height: 0; }
+  .links { margin-left: 0; width: 100%; }
+  .section-head { align-items: start; }
+  .tabs { width: 100%; overflow-x: auto; flex-wrap: nowrap; }
+  .tab { flex: 0 0 auto; }
+  .squares { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .65rem; }
+  .sq { padding: .75rem; border-radius: 18px; }
+  .sq-title { font-size: .9rem; }
+  .sq-desc { font-size: .76rem; -webkit-line-clamp: 3; }
+}
+@media (prefers-reduced-motion: reduce) {
+  * { scroll-behavior: auto !important; }
+}
 </style>
-</head>
-<body>
 
-<header>
-  <div class="nav">
-    <a class="brand" href="#top">
-      <img src="assets/logo.png" alt="Biscotteca">
-      <span>Biscotteca</span>
-    </a>
-    <nav class="navlinks">
-      <a href="#cardapio">Cardápio</a>
-      <a href="#sobre">Sobre</a>
-      <a href="#pedir">Como pedir</a>
-    </nav>
-    <a class="btn-wpp" href="https://api.whatsapp.com/send/?phone=5554994170585&text=Oi!%20Quero%20fazer%20um%20pedido%20na%20Biscotteca%20%F0%9F%8D%AA&type=phone_number&app_absent=0" target="_blank" rel="noopener">
-      🥛 Pedir no WhatsApp
-    </a>
-  </div>
-</header>
+<div class="inner">
+  <nav class="nav" aria-label="Principal">
+    <button class="logo" type="button" data-go="home"><span class="logo-mark" aria-hidden="true">Py</span>Trilha Dev</button>
+    <div class="links">
+      <a href="#cursos" data-go="home">Cursos</a>
+      <a href="#progresso" data-go="home">Progresso</a>
+      <a href="#fontes" data-go="home">Fontes</a>
+      <a href="#perfil" data-go="perfil">Perfil</a>
+    </div>
+  </nav>
 
-<section class="hero" id="top">
-  <div class="wrap">
-    <div>
-      <span class="eyebrow">🍪 Cookies artesanais</span>
-      <h1>O cookie que some<span class="script">rapidinho da bandeja</span></h1>
-      <p class="lead">Massa macia por dentro, crocante por fora, recheios generosos e feitos à mão, um de cada vez. Estilo Nova York, carinho daqui.</p>
-      <div class="hero-ctas">
-        <a class="btn-primary" href="https://api.whatsapp.com/send/?phone=5554994170585&text=Oi!%20Quero%20ver%20o%20card%C3%A1pio%20da%20Biscotteca%20%F0%9F%8D%AA&type=phone_number&app_absent=0" target="_blank" rel="noopener">🍪 Pedir agora</a>
-        <a class="btn-secondary" href="#cardapio">Ver cardápio</a>
+  <!-- TELA 1: vitrine -->
+  <div id="home">
+    <section class="hero">
+      <div>
+        <h1>Cursos que <em>levam ao</em> primeiro emprego</h1>
+        <p>Os cursos da trilha, na ordem do plano: lógica, Python, backend com FastAPI e as ferramentas que o mercado pede. Cada um tem o link direto e a carga horária.</p>
+        <form class="search" role="search" onsubmit="return false">
+          <label for="q" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)">Buscar curso</label>
+          <input id="q" type="search" placeholder="Busque por tema: Python, Linux, SQL…" autocomplete="off">
+          <button class="btn-pill" type="button" id="go">Buscar</button>
+        </form>
+      </div>
+
+      <aside class="stage" id="progresso" aria-label="Resumo do plano">
+        <div class="stage-top"><span>Fase 1 · Fundamentos</span><span>Python</span></div>
+        <div>
+          <div class="stage-big">35<span> aulas</span></div>
+          <p style="margin:0 0 .6rem;color:var(--muted);font-size:.9rem">de Python, nos Mundos 1 a 3. Marque as aulas concluídas na tela de Python.</p>
+          <div class="stage-bar" aria-hidden="true"><i id="homeBar"></i></div>
+        </div>
+        <div class="stage-list">
+          <div><b><span class="dot"></span>Mundo 1 · primeiros passos</b><span>10 aulas</span></div>
+          <div><b><span class="dot"></span>Mundo 2 · decisões e laços</b><span>10 aulas</span></div>
+          <div><b><span class="dot" style="background:var(--muted)"></span>Mundo 3 · dados e funções</b><span>15 aulas</span></div>
+        </div>
+      </aside>
+    </section>
+
+    <div class="sources" id="fontes">
+      <strong>Fontes:</strong>
+      <span>Gustavo Guanabara (Curso em Vídeo)</span>
+      <span>Corey Schafer</span>
+      <span>freeCodeCamp</span>
+      <span>Rocketseat</span>
+      <span>Código Fonte TV</span>
+    </div>
+
+    <div class="section-head" id="cursos">
+      <h2>Cursos <em>da trilha</em></h2>
+      <div class="tabs" role="tablist" aria-label="Filtrar por tema">
+        <button class="tab" role="tab" aria-selected="true" data-cat="todos">Todos</button>
+        <button class="tab" role="tab" aria-selected="false" data-cat="lógica">Lógica</button>
+        <button class="tab" role="tab" aria-selected="false" data-cat="python">Python</button>
+        <button class="tab" role="tab" aria-selected="false" data-cat="backend">Backend</button>
+        <button class="tab" role="tab" aria-selected="false" data-cat="dados">Dados</button>
+        <button class="tab" role="tab" aria-selected="false" data-cat="ferramentas">Ferramentas</button>
       </div>
     </div>
-    <div class="hero-art">
-      <svg class="cookie-hero" viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg">
-        <circle cx="200" cy="205" r="150" fill="#C9955C" stroke="#1E1E1E" stroke-width="6"/>
-        <path d="M320 120 C340 95, 355 60, 335 35 C320 55, 305 75, 300 100 Z" fill="#FBF3E7" stroke="#1E1E1E" stroke-width="4"/>
-        <circle cx="150" cy="140" r="14" fill="#4A3526"/>
-        <circle cx="230" cy="120" r="11" fill="#4A3526"/>
-        <circle cx="270" cy="190" r="15" fill="#4A3526"/>
-        <circle cx="140" cy="220" r="10" fill="#4A3526"/>
-        <circle cx="190" cy="260" r="13" fill="#4A3526"/>
-        <circle cx="260" cy="280" r="9" fill="#4A3526"/>
-        <circle cx="100" cy="180" r="9" fill="#4A3526"/>
-        <circle cx="220" cy="200" r="8" fill="#4A3526"/>
-      </svg>
-      <svg class="crumb-fly" style="top:8%;right:6%;width:26px" viewBox="0 0 20 20"><circle cx="10" cy="10" r="9" fill="#4A3526"/></svg>
-      <svg class="crumb-fly" style="top:60%;right:0%;width:16px;animation-delay:.6s" viewBox="0 0 20 20"><circle cx="10" cy="10" r="9" fill="#8B6A3E"/></svg>
-      <svg class="crumb-fly" style="top:30%;right:14%;width:12px;animation-delay:1.2s" viewBox="0 0 20 20"><circle cx="10" cy="10" r="9" fill="#4A3526"/></svg>
-    </div>
-  </div>
-  <div class="bite-divider">
-    <svg viewBox="0 0 1200 60" preserveAspectRatio="none"><path d="M0,60 L0,20 Q25,0 50,20 T100,20 T150,20 T200,20 T250,20 T300,20 T350,20 T400,20 T450,20 T500,20 T550,20 T600,20 T650,20 T700,20 T750,20 T800,20 T850,20 T900,20 T950,20 T1000,20 T1050,20 T1100,20 T1150,20 T1200,20 L1200,60 Z" fill="#4A3526"/></svg>
-  </div>
-</section>
 
-<div class="marquee-strip">
-  <div class="track">
-    <span>🍪 Feito à mão, todo dia</span><span>🥛 Pedidos direto pelo WhatsApp</span><span>🍪 Recheios generosos</span><span>🥛 Estilo Nova York</span>
-    <span>🍪 Feito à mão, todo dia</span><span>🥛 Pedidos direto pelo WhatsApp</span><span>🍪 Recheios generosos</span><span>🥛 Estilo Nova York</span>
+    <div class="grid" id="grid">
+      <article class="card" data-cat="lógica python" data-title="python 3 mundos 1 2 3 aulas guanabara">
+        <div class="card-art"><span class="art-tag">Python 3</span></div>
+        <div class="card-body">
+          <div class="meta"><span class="pill">Python</span><span>3 mundos · 35 aulas</span></div>
+          <h3>Python 3: Mundos 1 a 3, em aulas de 1 hora</h3>
+          <p>Do zero até funções e erros, com os exercícios do Guanabara. Cada aula mostra o que você aprende.</p>
+          <div class="card-foot"><span>Curso em Vídeo</span><button type="button" data-go="python">Abrir aulas →</button></div>
+        </div>
+      </article>
+
+      <article class="card" data-cat="backend python" data-title="fastapi corey schafer api python">
+        <div class="card-art"><span class="art-tag">FastAPI</span></div>
+        <div class="card-body">
+          <div class="meta"><span class="pill">Backend</span><span>19 partes · 14,6 h</span></div>
+          <h3>FastAPI: do zero ao deploy</h3>
+          <p>Corey Schafer. APIs, validação, banco de dados, autenticação e deploy com Docker.</p>
+          <div class="card-foot"><span>Corey Schafer</span><a href="https://www.youtube.com/playlist?list=PL-osiE80TeTsak-c-QsVeg0YYG_0TeyXI" target="_blank" rel="noopener noreferrer">Ver playlist ↗</a></div>
+        </div>
+      </article>
+
+      <article class="card" data-cat="lógica" data-title="algoritmo lógica guanabara 40 horas">
+        <div class="card-art"><span class="art-tag">Algoritmo</span></div>
+        <div class="card-body">
+          <div class="meta"><span class="pill">Lógica</span><span>40 horas</span></div>
+          <h3>Algoritmo e lógica de programação</h3>
+          <p>A base de tudo. Do zero, com Gustavo Guanabara. Você tem Algoritmo na UCS, então entra como revisão.</p>
+          <div class="card-foot"><span>Curso em Vídeo</span><a href="https://www.cursoemvideo.com/curso/curso-de-algoritmo/" target="_blank" rel="noopener noreferrer">Abrir curso ↗</a></div>
+        </div>
+      </article>
+
+      <article class="card" data-cat="ferramentas" data-title="git github versionamento guanabara">
+        <div class="card-art"><span class="art-tag">Git</span></div>
+        <div class="card-body">
+          <div class="meta"><span class="pill">Ferramentas</span><span>20 horas</span></div>
+          <h3>Git e GitHub</h3>
+          <p>Versionamento e colaboração. Todo projeto do portfólio passa por aqui.</p>
+          <div class="card-foot"><span>Curso em Vídeo</span><a href="https://www.cursoemvideo.com/curso/curso-de-git-e-github/" target="_blank" rel="noopener noreferrer">Abrir curso ↗</a></div>
+        </div>
+      </article>
+
+      <article class="card" data-cat="dados" data-title="sql banco de dados freecodecamp">
+        <div class="card-art"><span class="art-tag">SQL</span></div>
+        <div class="card-body">
+          <div class="meta"><span class="pill">Dados</span><span>Tutorial completo</span></div>
+          <h3>SQL para iniciantes e entrevistas</h3>
+          <p>Consultas, joins e perguntas de entrevista resolvidas. Em inglês.</p>
+          <div class="card-foot"><span>freeCodeCamp</span><a href="https://www.youtube.com/watch?v=-fW2X7fh7Yg" target="_blank" rel="noopener noreferrer">Assistir ↗</a></div>
+        </div>
+      </article>
+
+      <article class="card" data-cat="python backend" data-title="javascript guanabara 40 horas web">
+        <div class="card-art"><span class="art-tag">JavaScript</span></div>
+        <div class="card-body">
+          <div class="meta"><span class="pill">Python</span><span>40 horas</span></div>
+          <h3>JavaScript do zero</h3>
+          <p>Depois de Python, a linguagem da web. Base para o front e para o TypeScript.</p>
+          <div class="card-foot"><span>Curso em Vídeo</span><a href="https://www.cursoemvideo.com/curso/javascript/" target="_blank" rel="noopener noreferrer">Abrir curso ↗</a></div>
+        </div>
+      </article>
+    </div>
+    <p class="empty" id="vazio" hidden>Nenhum curso com esse termo. Tente outro tema.</p>
   </div>
+
+  <!-- TELA 2: aulas de Python -->
+  <div id="python" hidden>
+    <button class="back" type="button" data-go="home">← Voltar aos cursos</button>
+
+    <header class="py-head">
+      <div>
+        <h1>Python <em>em aulas</em></h1>
+        <p>Mundos 1 a 3 do Guanabara, na ordem da playlist, em sessões de cerca de 1 hora. Toque em uma aula para ver os vídeos e o que você vai aprender.</p>
+      </div>
+      <span class="py-count" id="pyCount">0 de 35 aulas</span>
+    </header>
+
+    <div id="pyMundos"></div>
+
+    <section class="detail" id="detail" hidden aria-live="polite"></section>
+
+    <footer>
+      <span>Os vídeos são do canal Curso em Vídeo. Abrem no YouTube.</span>
+      <span id="saveNote">Carregando seu progresso...</span>
+    </footer>
+  </div>
+
+  <!-- TELA 3: perfil -->
+  <div id="perfil" hidden>
+    <button class="back" type="button" data-go="home">← Voltar aos cursos</button>
+
+    <header class="py-head">
+      <div>
+        <h1>Seu <em>perfil</em></h1>
+        <p>Status, missões e hábitos. Cada aula concluída e cada missão feita sobe o seu nível.</p>
+      </div>
+    </header>
+
+    <section class="sys">
+      <div class="sys-card c-status">
+        <h2>Status</h2>
+        <div class="avatar-row">
+          <label class="avatar" title="Trocar foto de perfil">
+            <span id="avatarLetra" aria-hidden="true">G</span>
+            <img id="avatarImg" alt="Foto de perfil" hidden>
+            <input type="file" id="fotoInput" accept="image/*" aria-label="Escolher foto de perfil">
+          </label>
+          <div class="who">
+            <div class="name-row">
+              <h3 id="nomeTxt">Gabriel</h3>
+              <button type="button" class="pencil" id="editNome" aria-label="Editar nome" title="Editar nome">✎</button>
+            </div>
+            <form id="nomeForm" class="name-form" hidden>
+              <input id="nomeInput" maxlength="24" aria-label="Novo nome" autocomplete="off">
+              <button type="submit">Salvar</button>
+            </form>
+            <p id="titulo">Iniciante</p>
+            <small class="avatar-hint">Toque no avatar para trocar a foto</small>
+          </div>
+          <div style="margin-left:auto"><span class="lvl" id="nivel">1</span><span class="lvl-lbl">NÍVEL</span></div>
+        </div>
+        <div class="xpbar" aria-hidden="true"><i id="xpFill"></i></div>
+        <div class="xp-line"><span id="xpTxt">0 XP</span><span id="xpNext"></span></div>
+        <div id="stats"></div>
+      </div>
+
+      <div class="sys-card c-missoes">
+        <h2>Missões de hoje</h2>
+        <div id="missoes"></div>
+        <p class="muted-note">Cada missão vale 20 XP. As missões são zeradas por dia.</p>
+      </div>
+
+      <div class="sys-card c-habitos">
+        <h2>Hábitos da semana</h2>
+        <div class="chart" id="chart"></div>
+        <p class="muted-note">Cada barra é o total de missões feitas no dia, de 0 a 4.</p>
+      </div>
+
+      <div class="sys-card c-skills">
+        <h2>Habilidades</h2>
+        <div id="skills"></div>
+        <p class="muted-note">Lógica, SQL, Git e HTTP entram aqui quando as playlists desses cursos forem mapeadas.</p>
+      </div>
+    </section>
+  </div>
+
+  <footer id="homeFoot">
+    <span>Trilha pessoal de estudos. Os cursos continuam sendo de seus autores.</span>
+    <span>Carga horária conforme a página de cada curso.</span>
+  </footer>
 </div>
 
-<section class="benefits" id="pedir">
-  <div class="wrap">
-    <div class="section-head">
-      <span class="eyebrow">Como funciona</span>
-      <h2>Sem complicação, só cookie</h2>
-      <p>Nada de carrinho ou cadastro. Você escolhe, chama no zap e a gente combina tudo por lá.</p>
-    </div>
-    <div class="benefits-grid">
-      <div class="benefit-card">
-        <div class="benefit-icon">🌾</div>
-        <h3>Ingredientes selecionados</h3>
-        <p>Escolhemos cada chocolate e recheio a dedo, sem economizar no que importa.</p>
-      </div>
-      <div class="benefit-card">
-        <div class="benefit-icon">🥄</div>
-        <h3>Produzido artesanalmente</h3>
-        <p>Cada fornada é feita à mão, em lotes pequenos, do jeito que cookie bom merece.</p>
-      </div>
-      <div class="benefit-card">
-        <div class="benefit-icon">💬</div>
-        <h3>Pedido pelo WhatsApp</h3>
-        <p>Manda mensagem, escolhe os sabores e combina retirada ou entrega direto com a gente.</p>
-      </div>
-    </div>
-  </div>
-</section>
+<script>
+(function () {
+  "use strict";
 
-<section class="menu" id="cardapio">
-  <div class="wrap">
-    <div class="section-head">
-      <span class="eyebrow">🍪 Cardápio</span>
-      <h2>Sai quentinho do forno</h2>
-      <p>Seis sabores fixos, todos feitos artesanalmente. Escolha o seu e chama no WhatsApp.</p>
-    </div>
+  /* Mundos com vídeos: [id, título, segundos]. Vídeos privados e o duplicado já removidos. */
+  var MUNDOS = [
+    { nome: "Mundo 1 · Primeiros passos", videos: [
+      ["S9uPNppGsGo","Curso Python #01 - Seja um Programador",1747],["Mp0vhMDI7fA","Curso Python #02 - Para que serve o Python?",1313],["VuKvR1J2LQE","Curso Python #03 - Instalando o Python3 e o IDLE",1069],["31llNGKWDdo","Curso Python #04 - Primeiros comandos em Python3",1653],["ElRd0cbXIv4","Curso Python #05 - Instalando o PyCharm e o QPython3",1901],["nIHq1MtJaKs","Exercício Python #001 - Deixando tudo pronto",751],["FNqdV5Zb_5Q","Exercício Python #002 - Respondendo ao Usuário",286],["hdDHg1p3YVc","Curso Python #06 - Tipos Primitivos e Saída de Dados",1781],["PB254Cfjlyk","Exercício Python #003 - Somando dois números",336],["tHYxjJxtJko","Exercício Python #004 - Dissecando uma Variável",517],["Vw6gLypRKmY","Curso Python #07 - Operadores Aritméticos",2424],["664e0G_S9nU","Exercício Python #005 - Antecessor e Sucessor",313],["mqcNw_dhl8I","Exercício Python #006 - Dobro, Triplo, Raiz Quadrada",503],["_QfISzy0IKs","Exercício Python #007 - Média Aritmética",476],["KjcdG05EAZc","Exercício Python #008 - Conversor de Medidas",357],["qajq3SI0QQs","Exercício Python #009 - Tabuada",434],["xM4AX3Lp2mo","Exercício Python #010 - Conversor de Moedas",447],["mzSJpn9ldt4","Exercício Python #011 - Pintando Parede",417],["4MAmKOT9FeU","Exercício Python #012 - Calculando Descontos",561],["cTkivN8XcJ0","Exercício Python #013 - Reajuste Salarial",382],["9l_Gay8BuAw","Exercício Python #014 - Conversor de Temperaturas",410],["I4NYUeetLAc","Exercício Python #015 - Aluguel de Carros",468],["oOUyhGNib2Q","Curso Python #08 - Utilizando Módulos",2009],["-iSbDpl5Jhw","Exercício Python #016 - Quebrando um número",443],["vmPW9iWsYkY","Exercício Python #017 - Catetos e Hipotenusa",442],["9GvsphwW26k","Exercício Python #018 - Seno, Cosseno e Tangente",519],["_Nk02-mfB5I","Exercício Python #019 - Sorteando um item na lista",389],["OPh0nngbBSY","Exercício Python #020 - Sorteando uma ordem na lista",349],["9FiEji_fzvk","Exercício Python #021 - Tocando um MP3",466],["a7DH88vk2Sk","Curso Python #09 - Manipulando Texto",2807],["EQQt-6QqXOs","Exercício Python #022 - Analisador de Textos",657],["wD2aerLMBWA","Exercício Python #023 - Separando dígitos de um número",496],["QroT8cZMRnc","Exercício Python #024 - Primeiras letras de um texto",348],["WHWGz2Dy1ZU","Exercício Python #025 - Procurando uma string dentro de outra",333],["23UOVEetNPY","Exercício Python #026 - Primeira e última ocorrência",586],["SifYYsXhLM8","Exercício Python #027 - Primeiro e último nome",463],["K10u3XIf1-Q","Curso Python #10 - Condições (Parte 1)",2085],["kchC5KLZSZ4","Exercício Python #028 - Jogo da Adivinhação v.1.0",622],["hgJ_ETNGSj8","Exercício Python #029 - Radar eletrônico",521],["4vFCzKuHOn4","Exercício Python #030 - Par ou Ímpar?",354],["PGqHyzWoagc","Exercício Python #031 - Custo da Viagem",437],["cyGY_83m4Xw","Exercício Python #032 - Ano Bissexto",526],["a_8FbW5oH6I","Exercício Python #033 - Maior e menor valores",505],["Sfadj_AzKHw","Exercício Python #034 - Aumentos múltiplos",459],["NZiNphKkxhg","Exercício Python #035 - Analisando Triângulo v1.0",649],["0hBIhkcA8O8","Curso Python #11 - Cores no Terminal",1843]
+    ]},
+    { nome: "Mundo 2 · Decisões e repetições", videos: [
+      ["nJkVHusJp6E","Mundo 02 - Curso de Python - Dicas e Regras",1069],["j9bYDjaAYzw","Curso Python #012 - Condições Aninhadas",1775],["IV13X0QOMU8","Exercício Python #036 - Aprovando Empréstimo",708],["B3F0IjH5WAM","Exercício Python #037 - Conversor de Bases Numéricas",674],["iuPbB9uHczM","Exercício Python #038 - Comparando números",401],["ePwP4gU_waY","Exercício Python #039 - Alistamento Militar",775],["QuWDyUeoaJs","Exercício Python #040 - Aquele clássico da Média",588],["ZiC5NgSGJXU","Exercício Python #041 - Classificando Atletas",372],["ZX7sCPjcHA0","Exercício Python #042 - Analisando Triângulos v2.0",831],["b7r34za963I","Exercício Python #043 - Índice de Massa Corporal",811],["I-SH3QchuZ4","Exercício Python #044 - Gerenciador de Pagamentos",924],["tapTa6KVG-A","Exercício Python #045 - GAME: Pedra Papel e Tesoura",1007],["cL4YDtFnCt4","Curso Python #013 - Estrutura de repetição for",2125],["NR1RKt6NT8s","Exercício Python #046 - Contagem regressiva",445],["Qws8-E-YrlY","Exercício Python #047 - Contagem de pares",431],["iHjsUxNA-wo","Exercício Python #048 - Soma ímpares múltiplos de três",580],["QtElJDa9ICM","Exercício Python #049 - Tabuada v.2.0",397],["rJaBLOW57Jg","Exercício Python #050 - Soma dos pares",489],["-OnqSGh0u4g","Exercício Python #051 - Progressão Aritmética",518],["Er5Hyd4LyVw","Exercício Python #052 - Números primos",676],["5VBWe6BXzRo","Exercício Python #053 - Detector de Palíndromo",731],["IL5iBWoKRIs","Exercício Python #054 - Grupo da Maioridade",602],["Kjpb_IAOKRQ","Exercício Python #055 - Maior e menor da sequência",611],["fokDF4th0IY","Exercício Python #056 - Analisador completo",827],["LH6OIn2lBaI","Curso Python #014 - Estrutura de repetição while",2298],["JGztEBLGj5E","Exercício Python #057 - Validação de Dados",584],["-QkOIHJ1Chw","Exercício Python #058 - Jogo da Adivinhação v2.0",686],["OBJL5vPj4-E","Exercício Python #059 - Criando um Menu de Opções",874],["9dlBZlkvvxY","Exercício Python #060 - Cálculo do Fatorial",730],["vu5ehetQGe8","Exercício Python #061 - Progressão Aritmética v2.0",553],["BWAWq7n6PCk","Exercício Python #062 - Super Progressão Aritmética v3.0",577],["w7yn1_Mfu0E","Exercício Python #063 - Sequência de Fibonacci v1.0",688],["mYlbttiLHM0","Exercício Python #064 - Tratando vários valores v1.0",722],["QNPuPlPM--0","Exercício Python #065 - Maior e Menor valores",714],["1OFp_-R2B2A","Curso Python #15 - Interrompendo repetições while",2490],["d2ug6quC1bk","Exercício Python #066 - Vários números com flag",805],["X0a5aZg93Uc","Exercício Python #067 - Tabuada v3.0",528],["EIzgKCCDdc0","Exercício Python #068 - Jogo do Par ou Ímpar",775],["4Ca6iRJo3M0","Exercício Python #069 - Análise de dados do grupo",784],["hS8QdW-1HTo","Exercício Python #070 - Estatísticas em produtos",908],["_XGgwltYpYk","Exercício Python #071 - Simulador de Caixa Eletrônico",810]
+    ]},
+    { nome: "Mundo 3 · Estruturas de dados e funções", videos: [
+      ["0LB3FSfjvao","Curso Python #16 - Tuplas",3221],["ei2Kr3ccfO0","Exercício Python #072 - Número por Extenso",657],["RexybLcGewA","Exercício Python #073 - Tuplas com Times de Futebol",822],["mlwt2CRQkTQ","Exercício Python #074 - Maior e menor valores em Tupla",568],["1u7oA8ckjAc","Exercício Python #075 - Análise de dados em uma Tupla",647],["Qp2cXfCHk2I","Exercício Python #076 - Lista de Preços com Tupla",538],["8BgSqrOpKvU","Exercício Python #077 - Contando vogais em Tupla",533],["N1hTsbW50eM","Curso Python #17 - Listas (Parte 1)",2417],["q8Z1cRdJnfk","Exercício Python #078 - Maior e Menor valores na Lista",933],["LkAzRnc_GPk","Exercício Python #079 - Valores únicos em uma Lista",614],["QDpwjBYRcVE","Exercício Python #080 - Lista ordenada sem repetições",799],["SXJKAVVlvGA","Exercício Python #081 - Extraindo dados de uma Lista",692],["uk0gDFQEo_I","Exercício Python #082 - Dividindo valores em várias listas",536],["dvhP41Z7TLk","Exercício Python #083 - Validando expressões matemáticas",638],["YV_JQmZNFsk","Curso Python #17 - Listas (Parte 2)",2341],["zPtvuLiEdKk","Exercício Python #084 - Lista composta e análise de dados",1044],["2-fy24bbMJ4","Exercício Python #085 - Listas com pares e ímpares",658],["EGmlFdwD4C4","Exercício Python #086 - Matriz em Python",709],["QhS829x6up4","Exercício Python #087 - Mais sobre Matriz em Python",718],["Hd7Ycaj61xE","Exercício Python #088 - Palpites para a Mega Sena",903],["7xrCJnniqMw","Exercício Python #089 - Boletim com listas compostas",900],["ZWj8o692qGY","Curso Python #19 - Dicionários",2717],["HipQYUk4koA","Exercício Python #090 - Dicionário em Python",555],["cwrqIztaAwk","Exercício Python #091 - Jogo de Dados em Python",831],["Vsqemzdrj78","Exercício Python #092 - Cadastro de Trabalhador",730],["5yKiud-YNaE","Exercício Python #093 - Cadastro de Jogador de Futebol",775],["ETnExBCFeps","Exercício Python #094 - Unindo dicionários e listas",1098],["mw1So0r317Y","Exercício Python #095 - Aprimorando os Dicionários",1214],["ezfr9d7wd_k","Curso Python #20 - Funções (Parte 1)",3127],["oV1s53YGtvE","Exercício Python #096 - Função que calcula área",498],["Q6basnSo7r0","Exercício Python #097 - Um print especial",472],["DCBlt_z2UOE","Exercício Python #098 - Função de Contador",996],["vp9UX7wr92o","Exercício Python #099 - Função que descobre o maior",621],["MEs-41JcuhM","Exercício Python #100 - Funções para sortear e somar",721],["etjJ_4Eqrk8","Curso Python #21 - Funções (Parte 2)",3004],["czDcimdc3GU","Exercício Python #101 - Funções para votação",560],["84jUX96cs7Q","Exercício Python #102 - Função para Fatorial",468],["FbOvilKfHMI","Exercício Python #103 - Ficha do Jogador",475],["VrQmMbPpbf0","Exercício Python #104 - Validando entrada de dados",499],["Kbs97l38vVQ","Exercício Python #105 - Analisando e gerando Dicionários",605],["BMKYnZoxy88","Exercício Python #106 - Sistema interativo de ajuda",839],["s3r8_Aug4y8","Curso Python #22 - Módulos e Pacotes",2270],["y8pI8YBphQI","Exercício Python #107 - Exercitando módulos",768],["KtRkGEeUdqE","Exercício Python #108 - Formatando Moedas",735],["Y0zNYTHoGhQ","Exercício Python #109 - Formatando Moedas",644],["uBQ0--sRFUI","Exercício Python #111 - Transformando módulos em pacotes",553],["6vADeY5_pMs","Exercício Python #112 - Entrada de dados monetários",819],["xz2B3bfNjEk","Curso Python #23 - Tratamento de Erros e Exceções",2262],["KowQ_UIMuI8","Exercício Python #113 - Funções aprofundadas",815],["8jAykqxIeqw","Exercício Python #114 - Site está acessível?",583]
+    ]}
+  ];
 
-    <div class="menu-grid">
+  /* O que você aprende em cada aula, na mesma ordem em que as aulas são montadas (agrupamento de até 70 min). */
+  var APRENDE = [
+    "O que é programar e o que o Python faz. Instalar o Python e o IDLE.",
+    "Escrever os primeiros comandos e rodar código. Configurar um editor.",
+    "Usar input e print, guardar valores em variáveis e entender os tipos de dado.",
+    "Fazer contas no código: soma, divisão, potência e raiz, aplicadas a problemas simples.",
+    "Resolver problemas com cálculo e formatar o resultado. Montar a fórmula antes de codar.",
+    "Importar bibliotecas como math e random. Usar funções prontas em vez de reinventar.",
+    "Trabalhar com texto: métodos de string e leitura de dados digitados pelo usuário.",
+    "Buscar, fatiar e separar partes de um texto ou de um número.",
+    "Tomar decisões no código com if e else.",
+    "Combinar condições para validar regras, como ano bissexto e triângulo, e colorir a saída.",
+    "Organizar condições dentro de condições sem se perder.",
+    "Decidir com várias condições e converter números entre bases.",
+    "Montar programas com regras de negócio e um jogo que depende de decisões.",
+    "Repetir uma ação um número definido de vezes com for.",
+    "Aplicar for em sequências, números primos e verificação de palíndromos.",
+    "Repetir enquanto uma condição for verdadeira com while, e validar entradas.",
+    "Criar menus e algoritmos clássicos, como fatorial e Fibonacci, usando laços.",
+    "Sair de laços com break e processar vários valores de uma vez.",
+    "Usar flags e acumuladores para fazer análises de dados.",
+    "Juntar tudo num simulador com menu, validação e decisões.",
+    "Entender tuplas: coleções fixas, que não mudam depois de criadas.",
+    "Praticar tuplas em problemas com dados de times, preços e textos.",
+    "Criar e percorrer listas, e tirar valores repetidos.",
+    "Ordenar listas e separar dados em várias listas.",
+    "Trabalhar com listas dentro de listas e analisar os dados delas.",
+    "Usar matrizes (listas de listas) para representar tabelas.",
+    "Guardar dados com chave e valor usando dicionários.",
+    "Montar cadastros combinando dicionários e listas.",
+    "Criar funções com parâmetros e retorno, e reaproveitar código.",
+    "Escrever funções que guardam estado e combinam outras funções.",
+    "Aprofundar funções: escopo, retorno e chamadas com argumentos.",
+    "Validar dados do usuário e montar um sistema interativo de ajuda.",
+    "Organizar código em módulos e pacotes separados.",
+    "Formatar valores de dinheiro e organizar um projeto em pacotes.",
+    "Tratar erros com try e except, para o programa não quebrar."
+  ];
 
-      <div class="menu-card">
-        <div class="menu-card-top"><span class="menu-num">01</span><span class="menu-name">Avelã</span></div>
-        <p class="menu-desc">Massa tradicional de baunilha, chips de chocolate meio amargo e recheio de avelã.</p>
-        <div class="menu-tags"><span>Ingredientes selecionados</span><span>Artesanal</span></div>
-        <div class="menu-foot">
-          <span class="menu-price">R$ 13,00</span>
-          <a class="menu-order" href="https://api.whatsapp.com/send/?phone=5554994170585&text=Oi!%20Quero%20pedir%20o%20cookie%20Avel%C3%A3%20%F0%9F%8D%AA&type=phone_number&app_absent=0" target="_blank" rel="noopener">Pedir →</a>
-        </div>
-      </div>
+  var TETO = 4200; /* 70 min */
+  var LS_KEY = "trilha-python:v2";
+  var aulas = [];
+  var done = {};
+  var dbDoc = null;
+  var saveTimer = null;
+  var writing = Promise.resolve();
+  var selected = null;
+  var habits = {};   /* { "AAAA-MM-DD": { estudo: true, exercicio: true, audio: true, revisao: true } } */
 
-      <div class="menu-card">
-        <div class="menu-card-top"><span class="menu-num">02</span><span class="menu-name">Red Velvet</span></div>
-        <p class="menu-desc">Massa red velvet, chips de chocolate branco e recheio de brigadeiro de ninho.</p>
-        <div class="menu-tags"><span>Ingredientes selecionados</span><span>Artesanal</span></div>
-        <div class="menu-foot">
-          <span class="menu-price">R$ 13,00</span>
-          <a class="menu-order" href="https://api.whatsapp.com/send/?phone=5554994170585&text=Oi!%20Quero%20pedir%20o%20cookie%20Red%20Velvet%20%F0%9F%8D%AA&type=phone_number&app_absent=0" target="_blank" rel="noopener">Pedir →</a>
-        </div>
-      </div>
+  var perfil = { nome: "Gabriel", foto: "" };   /* nome e foto de perfil (foto reduzida em 160 px) */
 
-      <div class="menu-card">
-        <div class="menu-card-top"><span class="menu-num">03</span><span class="menu-name">Chocolatudo</span></div>
-        <p class="menu-desc">Massa de cacau, chips de chocolate meio amargo e recheio de brigadeiro.</p>
-        <div class="menu-tags"><span>Ingredientes selecionados</span><span>Artesanal</span></div>
-        <div class="menu-foot">
-          <span class="menu-price">R$ 13,00</span>
-          <a class="menu-order" href="https://api.whatsapp.com/send/?phone=5554994170585&text=Oi!%20Quero%20pedir%20o%20cookie%20Chocolatudo%20%F0%9F%8D%AA&type=phone_number&app_absent=0" target="_blank" rel="noopener">Pedir →</a>
-        </div>
-      </div>
+  function lePerfil(o) {
+    return {
+      nome: (o && typeof o.nome === "string" && o.nome.trim()) ? o.nome.trim().slice(0, 24) : "Gabriel",
+      foto: (o && typeof o.foto === "string") ? o.foto : ""
+    };
+  }
+  function resizeFoto(file, cb) {
+    var reader = new FileReader();
+    reader.onload = function () {
+      var img = new Image();
+      img.onload = function () {
+        var s = 160, w = img.width, h = img.height, m = Math.min(w, h);
+        var c = document.createElement("canvas");
+        c.width = s; c.height = s;
+        c.getContext("2d").drawImage(img, (w - m) / 2, (h - m) / 2, m, m, 0, 0, s, s);
+        cb(c.toDataURL("image/jpeg", 0.85));
+      };
+      img.onerror = function () { cb(null); };
+      img.src = reader.result;
+    };
+    reader.onerror = function () { cb(null); };
+    reader.readAsDataURL(file);
+  }
 
-      <div class="menu-card">
-        <div class="menu-card-top"><span class="menu-num">04</span><span class="menu-name">Nozes</span></div>
-        <p class="menu-desc">Massa tradicional com nozes, chips de chocolate meio amargo e recheio de brigadeiro.</p>
-        <div class="menu-tags"><span>Ingredientes selecionados</span><span>Artesanal</span></div>
-        <div class="menu-foot">
-          <span class="menu-price">R$ 15,00</span>
-          <a class="menu-order" href="https://api.whatsapp.com/send/?phone=5554994170585&text=Oi!%20Quero%20pedir%20o%20cookie%20Nozes%20%F0%9F%8D%AA&type=phone_number&app_absent=0" target="_blank" rel="noopener">Pedir →</a>
-        </div>
-      </div>
+  var MISSOES = [
+    ["estudo", "Estudar 1 hora da trilha", "+20 XP"],
+    ["exercicio", "Resolver exercícios sem olhar a resposta", "+20 XP"],
+    ["audio", "Gravar 1 min explicando o que aprendeu", "+20 XP"],
+    ["revisao", "Revisar o caderno de erros", "+20 XP"]
+  ];
+  var TITULOS = ["Iniciante", "Aprendiz", "Estudante dedicado", "Programador em formação", "Dev júnior"];
+  var DIAS = ["dom", "seg", "ter", "qua", "qui", "sex", "sáb"];
 
-      <div class="menu-card">
-        <div class="menu-card-top"><span class="menu-num">05</span><span class="menu-name">Casadinho</span></div>
-        <p class="menu-desc">Massa meio a meio, tradicional e de cacau, chips de chocolate meio amargo e branco, recheio de ninho e avelã.</p>
-        <div class="menu-tags"><span>Ingredientes selecionados</span><span>Artesanal</span></div>
-        <div class="menu-foot">
-          <span class="menu-price">R$ 14,00</span>
-          <a class="menu-order" href="https://api.whatsapp.com/send/?phone=5554994170585&text=Oi!%20Quero%20pedir%20o%20cookie%20Casadinho%20%F0%9F%8D%AA&type=phone_number&app_absent=0" target="_blank" rel="noopener">Pedir →</a>
-        </div>
-      </div>
+  function p2(n) { return n < 10 ? "0" + n : "" + n; }
+  function diaKey(off) {
+    var d = new Date();
+    d.setDate(d.getDate() - off);
+    return d.getFullYear() + "-" + p2(d.getMonth() + 1) + "-" + p2(d.getDate());
+  }
+  function contaDia(key) {
+    var h = habits[key] || {};
+    var c = 0;
+    MISSOES.forEach(function (m) { if (h[m[0]]) c += 1; });
+    return c;
+  }
+  function toggleMissao(key) {
+    var d = diaKey(0);
+    habits[d] = habits[d] || {};
+    if (habits[d][key]) delete habits[d][key]; else habits[d][key] = true;
+    paint();
+    save();
+  }
 
-      <div class="menu-card">
-        <div class="menu-card-top"><span class="menu-num">06</span><span class="menu-name">Kinder Bueno</span></div>
-        <p class="menu-desc">Massa tradicional, chips de chocolate meio amargo e branco, recheio de Kinder Bueno.</p>
-        <div class="menu-tags"><span>Ingredientes selecionados</span><span>Artesanal</span></div>
-        <div class="menu-foot">
-          <span class="menu-price">R$ 17,00</span>
-          <a class="menu-order" href="https://api.whatsapp.com/send/?phone=5554994170585&text=Oi!%20Quero%20pedir%20o%20cookie%20Kinder%20Bueno%20%F0%9F%8D%AA&type=phone_number&app_absent=0" target="_blank" rel="noopener">Pedir →</a>
-        </div>
-      </div>
+  function renderPerfil() {
+    if (!$("perfil")) return;
+    var nome = perfil.nome || "Gabriel";
+    $("nomeTxt").textContent = nome;
+    $("avatarLetra").textContent = nome.charAt(0).toUpperCase();
+    var fotoEl = $("avatarImg");
+    if (perfil.foto) {
+      fotoEl.src = perfil.foto;
+      fotoEl.hidden = false;
+      $("avatarLetra").hidden = true;
+    } else {
+      fotoEl.hidden = true;
+      fotoEl.removeAttribute("src");
+      $("avatarLetra").hidden = false;
+    }
+    var totalAulas = aulas.length || 1;
+    var pyDone = 0;
+    aulas.forEach(function (a) { if (done[a.key]) pyDone += 1; });
 
-    </div>
-  </div>
-</section>
+    var missoesFeitas = 0;
+    Object.keys(habits).forEach(function (d) { missoesFeitas += contaDia(d); });
+    var dias7 = 0, audio30 = 0, i, j;
+    for (i = 0; i < 7; i++) { if (contaDia(diaKey(i)) > 0) dias7 += 1; }
+    for (j = 0; j < 30; j++) { if ((habits[diaKey(j)] || {}).audio) audio30 += 1; }
 
-<section class="about" id="sobre">
-  <div class="wrap">
-    <div class="about-visual">
-      <span class="script">Feito à mão,<br>fornada a fornada</span>
-      <p>Sem linha de produção. Cada cookie passa pela mão de quem faz, do jeito que comfort food de verdade merece.</p>
-    </div>
-    <div>
-      <span class="eyebrow">🥛 Sobre a Biscotteca</span>
-      <h2>Cookie de padaria de bairro, com carinho de confeitaria</h2>
-      <p>A Biscotteca nasceu da vontade de trazer aquele cookie grosso, macio por dentro e crocante por fora, estilo Nova York, pro dia a dia de quem gosta de um doce bem feito.</p>
-      <p>Cada sabor é pensado com ingredientes selecionados e recheios generosos, produzidos artesanalmente em lotes pequenos, pra garantir que cada mordida valha a pena.</p>
-    </div>
-  </div>
-</section>
+    var xp = pyDone * 100 + missoesFeitas * 20;
+    var nivel = Math.floor(xp / 400) + 1;
+    $("nivel").textContent = String(nivel);
+    $("titulo").textContent = TITULOS[Math.min(nivel - 1, TITULOS.length - 1)];
+    $("xpFill").style.width = ((xp % 400) / 400 * 100) + "%";
+    $("xpTxt").textContent = xp + " XP";
+    $("xpNext").textContent = "faltam " + (400 - (xp % 400)) + " XP para o nível " + (nivel + 1);
 
-<section class="cta-band">
-  <span class="eyebrow" style="background:var(--pink);color:var(--brown-dark);">🍪🥛</span>
-  <h2>Bateu a vontade? <span class="script">Chama no zap</span></h2>
-  <p>Todos os pedidos são feitos pelo WhatsApp. Escolhe os sabores, manda mensagem e a gente combina tudo com você.</p>
-  <a class="btn-primary" href="https://api.whatsapp.com/send/?phone=5554994170585&text=Oi!%20Quero%20fazer%20um%20pedido%20na%20Biscotteca%20%F0%9F%8D%AA&type=phone_number&app_absent=0" target="_blank" rel="noopener">🥛 Pedir no WhatsApp</a>
-</section>
+    var stats = [
+      ["Python", pyDone / totalAulas * 100, pyDone + " de " + totalAulas + " aulas"],
+      ["Disciplina", dias7 / 7 * 100, dias7 + " de 7 dias"],
+      ["Comunicação", Math.min(100, audio30 / 15 * 100), audio30 + " áudios"]
+    ];
+    var st = $("stats");
+    st.innerHTML = "";
+    stats.forEach(function (s) {
+      var row = el("div", "stat");
+      row.appendChild(el("span", null, s[0]));
+      var bar = el("span", "bar");
+      var fill = el("i");
+      fill.style.width = Math.round(s[1]) + "%";
+      bar.appendChild(fill);
+      row.appendChild(bar);
+      row.appendChild(el("b", null, s[2]));
+      st.appendChild(row);
+    });
 
-<footer>
-  <div class="wrap">
-    <div class="footer-grid">
-      <div>
-        <div class="footer-brand">
-          <img src="assets/logo.png" alt="Biscotteca">
-          <span>Biscotteca</span>
-        </div>
-        <p>Cookies artesanais estilo Nova York, feitos à mão em lotes pequenos. 🍪🥛</p>
-      </div>
-      <div>
-        <h4>Navegação</h4>
-        <ul>
-          <li><a href="#cardapio">Cardápio</a></li>
-          <li><a href="#sobre">Sobre</a></li>
-          <li><a href="#pedir">Como pedir</a></li>
-        </ul>
-      </div>
-      <div>
-        <h4>Contato</h4>
-        <ul>
-          <li><a href="https://api.whatsapp.com/send/?phone=5554994170585&text=Oi!%20Quero%20fazer%20um%20pedido%20na%20Biscotteca%20%F0%9F%8D%AA&type=phone_number&app_absent=0" target="_blank" rel="noopener">WhatsApp</a></li>
-          <li>Pedidos feitos só pelo WhatsApp</li>
-        </ul>
-      </div>
-    </div>
-    <div class="footer-bottom">
-      <span>© 2026 Biscotteca. Todos os cookies reservados.</span>
-      <span>Feito com 🍪 e carinho.</span>
-    </div>
-  </div>
-</footer>
+    var hj = habits[diaKey(0)] || {};
+    var mb = $("missoes");
+    mb.innerHTML = "";
+    MISSOES.forEach(function (m) {
+      var on = !!hj[m[0]];
+      var b = el("button", "mission");
+      b.type = "button";
+      b.dataset.m = m[0];
+      b.setAttribute("aria-pressed", on ? "true" : "false");
+      var txt = el("span", "m-txt");
+      txt.appendChild(el("span", "mission-box", on ? "✓" : ""));
+      txt.appendChild(el("span", null, m[1]));
+      b.appendChild(txt);
+      b.appendChild(el("small", null, m[2]));
+      mb.appendChild(b);
+    });
 
-</body>
-</html>
+    var ch = $("chart");
+    ch.innerHTML = "";
+    for (var k = 6; k >= 0; k--) {
+      var col = el("div");
+      var holder = el("div", "col-bar");
+      var bar2 = el("i");
+      bar2.style.height = (contaDia(diaKey(k)) / MISSOES.length * 100) + "%";
+      holder.appendChild(bar2);
+      col.appendChild(holder);
+      var dt = new Date();
+      dt.setDate(dt.getDate() - k);
+      col.appendChild(el("span", null, DIAS[dt.getDay()]));
+      ch.appendChild(col);
+    }
+
+    var sk = $("skills");
+    sk.innerHTML = "";
+    var row2 = el("div", "skill-row");
+    row2.appendChild(el("span", null, "Python"));
+    row2.appendChild(el("small", null, pyDone + " de " + totalAulas + " aulas"));
+    sk.appendChild(row2);
+    var sb = el("div", "skill-bar");
+    var sf = el("i");
+    sf.style.width = (pyDone / totalAulas * 100) + "%";
+    sb.appendChild(sf);
+    sk.appendChild(sb);
+  }
+
+  function $(id) { return document.getElementById(id); }
+  function el(tag, cls, text) {
+    var e = document.createElement(tag);
+    if (cls) e.className = cls;
+    if (text != null) e.textContent = text;
+    return e;
+  }
+  function fmt(s) {
+    var m = Math.round(s / 60);
+    if (m < 60) return m + " min";
+    var h = Math.floor(m / 60), r = m % 60;
+    return h + " h" + (r ? " " + r + " min" : "");
+  }
+
+  function agrupar() {
+    var n = 0;
+    MUNDOS.forEach(function (m, mi) {
+      var cur = [], soma = 0;
+      function fecha() {
+        if (!cur.length) return;
+        n += 1;
+        aulas.push({ key: "m" + (mi + 1) + "-" + cur[0][0], n: n, mundo: mi, videos: cur, total: soma, aprende: APRENDE[n - 1] || "" });
+        cur = []; soma = 0;
+      }
+      m.videos.forEach(function (v) {
+        if (cur.length && soma + v[2] > TETO) fecha();
+        cur.push(v);
+        soma += v[2];
+      });
+      fecha();
+    });
+  }
+
+  function buildPython() {
+    agrupar();
+    var wrap = $("pyMundos");
+    MUNDOS.forEach(function (m, mi) {
+      wrap.appendChild(el("h2", "mundo-title", m.nome));
+      var n = aulas.filter(function (a) { return a.mundo === mi; }).length;
+      var horas = aulas.filter(function (a) { return a.mundo === mi; }).reduce(function (s, a) { return s + a.total; }, 0);
+      wrap.appendChild(el("p", "mundo-sub", n + " aulas · " + fmt(horas) + " de vídeo"));
+      var grid = el("div", "squares");
+      aulas.filter(function (a) { return a.mundo === mi; }).forEach(function (a) {
+        var b = el("button", "sq");
+        b.type = "button";
+        b.dataset.key = a.key;
+        b.setAttribute("aria-pressed", "false");
+        b.setAttribute("aria-label", "Aula " + a.n + ": " + a.videos[0][1]);
+        var top = el("div", "sq-top");
+        top.appendChild(el("span", "sq-num", String(a.n)));
+        top.appendChild(el("span", "sq-tag", a.videos.length + (a.videos.length > 1 ? " vídeos" : " vídeo")));
+        b.appendChild(top);
+        b.appendChild(el("span", "sq-check", "✓"));
+        b.appendChild(el("h3", "sq-title", a.videos[0][1].replace(/^(Curso|Exercício) Python #?/, "").replace(/^(\d+)\s*-\s*/, "$1 · ").slice(0, 60)));
+        b.appendChild(el("p", "sq-desc", a.aprende));
+        b.appendChild(el("span", "sq-time", "~ " + fmt(a.total)));
+        grid.appendChild(b);
+        a.el = b;
+      });
+      wrap.appendChild(grid);
+    });
+    $("pyMundos").addEventListener("click", function (ev) {
+      var b = ev.target.closest ? ev.target.closest("button.sq") : null;
+      if (!b) return;
+      select(b.dataset.key);
+    });
+  }
+
+  function aulaByKey(k) {
+    for (var i = 0; i < aulas.length; i++) if (aulas[i].key === k) return aulas[i];
+    return null;
+  }
+
+  /* Toca o vídeo dentro da página, com o player incorporado do YouTube (sem chave de API). */
+  function tocar(id, pick, items) {
+    items.forEach(function (x) { x.setAttribute("aria-pressed", x === pick ? "true" : "false"); });
+    var d = $("detail");
+    var p = d && d.querySelector(".player");
+    if (!p) return;
+    p.innerHTML = "";
+    var cartaz = document.createElement("a");
+    cartaz.className = "thumb";
+    cartaz.href = "https://www.youtube.com/watch?v=" + encodeURIComponent(id);
+    cartaz.target = "_blank";
+    cartaz.rel = "noopener noreferrer";
+    var img = el("img");
+    img.src = "https://i.ytimg.com/vi/" + encodeURIComponent(id) + "/hqdefault.jpg";
+    img.alt = "";
+    img.loading = "lazy";
+    cartaz.appendChild(img);
+    cartaz.appendChild(el("span", "play", "▶"));
+    cartaz.appendChild(el("span", "cta", "Assistir no YouTube ↗"));
+    p.appendChild(cartaz);
+  }
+
+  function select(k) {
+    var a = aulaByKey(k);
+    if (!a) return;
+    selected = k;
+    aulas.forEach(function (x) { if (x.el) x.el.setAttribute("aria-pressed", x.key === k ? "true" : "false"); });
+    var d = $("detail");
+    d.innerHTML = "";
+    d.hidden = false;
+    d.appendChild(el("p", "aula-n", "AULA " + a.n + " · " + MUNDOS[a.mundo].nome));
+    d.lastChild.style.cssText = "margin:0;font-family:ui-monospace,monospace;font-size:.8rem;color:var(--accent)";
+    d.appendChild(el("h2", null, "Aula " + a.n + " · " + fmt(a.total)));
+    var learn = el("p", "learn");
+    learn.appendChild(el("b", null, "O que você aprende: "));
+    learn.appendChild(document.createTextNode(a.aprende));
+    d.appendChild(learn);
+    d.appendChild(el("div", "player"));
+    var ul = el("ul");
+    var items = [];
+    a.videos.forEach(function (v) {
+      var li = el("li");
+      var pick = el("button", "vid-pick");
+      pick.type = "button";
+      pick.setAttribute("aria-pressed", "false");
+      pick.appendChild(el("span", "vt", v[1]));
+      pick.appendChild(el("span", "dur", fmt(v[2])));
+      pick.addEventListener("click", function () { tocar(v[0], pick, items); });
+      li.appendChild(pick);
+      var ext = el("a", "ext", "↗");
+      ext.href = "https://www.youtube.com/watch?v=" + v[0];
+      ext.target = "_blank";
+      ext.rel = "noopener noreferrer";
+      ext.title = "Abrir no YouTube";
+      ext.setAttribute("aria-label", "Abrir no YouTube");
+      li.appendChild(ext);
+      items.push(pick);
+      ul.appendChild(li);
+    });
+    d.appendChild(ul);
+    if (a.videos.length) tocar(a.videos[0][0], items[0], items);
+    var act = el("div", "actions");
+    var btn = el("button", "btn", "Marcar como concluída");
+    btn.type = "button";
+    btn.id = "toggleDone";
+    btn.dataset.key = k;
+    act.appendChild(btn);
+    act.appendChild(el("span", "saved", "Faça os exercícios antes de marcar."));
+    d.appendChild(act);
+    paint();
+    d.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+
+  function paint() {
+    var feitas = 0;
+    aulas.forEach(function (a) {
+      var on = !!done[a.key];
+      if (on) feitas += 1;
+      if (a.el) {
+        a.el.classList.toggle("is-done", on);
+        a.el.querySelector(".sq-check").textContent = on ? "✓" : "";
+      }
+    });
+    $("pyCount").textContent = feitas + " de " + aulas.length + " aulas";
+    $("homeBar").style.width = (aulas.length ? feitas / aulas.length * 100 : 0) + "%";
+    var b = $("toggleDone");
+    if (b) {
+      var on = !!done[b.dataset.key];
+      b.setAttribute("aria-pressed", on ? "true" : "false");
+      b.textContent = on ? "Concluída · desfazer" : "Marcar como concluída";
+    }
+    renderPerfil();
+  }
+
+  function normalize(d) {
+    var out = {};
+    if (d && d.done && typeof d.done === "object") {
+      Object.keys(d.done).forEach(function (k) { if (d.done[k] === true) out[k] = true; });
+    }
+    return out;
+  }
+  function readLocal() {
+    try { var raw = localStorage.getItem(LS_KEY); return raw ? normalize(JSON.parse(raw)) : null; }
+    catch (e) { return null; }
+  }
+  function writeLocal() {
+    try { localStorage.setItem(LS_KEY, JSON.stringify({ done: done, habits: habits, perfil: perfil })); } catch (e) { /* sem armazenamento */ }
+  }
+  function save() {
+    writeLocal();
+    if (!dbDoc) return;
+    clearTimeout(saveTimer);
+    saveTimer = setTimeout(function () {
+      writing = writing.then(function () { return dbDoc.set({ done: done, habits: habits, perfil: perfil }); }).then(function () {
+        $("saveNote").textContent = "Progresso salvo na sua conta.";
+      }).catch(function () {
+        $("saveNote").textContent = "Não consegui salvar na sua conta agora. O progresso fica neste navegador.";
+      });
+    }, 400);
+  }
+  function connect() {
+    var c = window.claude;
+    if (!c || typeof c.use !== "function") { $("saveNote").textContent = "Progresso salvo só neste navegador."; return; }
+    Promise.all([c.use("db"), c.use("user")]).then(function (res) {
+      var db = res[0], user = res[1];
+      if (!db || !user) { $("saveNote").textContent = "Progresso salvo só neste navegador."; return null; }
+      return user.id().then(function (uid) {
+        if (!uid) { $("saveNote").textContent = "Progresso salvo só neste navegador."; return null; }
+        dbDoc = db.doc("data/users/" + uid + "/python");
+        return dbDoc.get().then(function (snap) {
+          if (snap.exists) {
+            done = normalize(snap.data());
+            habits = (snap.data().habits && typeof snap.data().habits === "object") ? snap.data().habits : {};
+            perfil = (snap.data().perfil && typeof snap.data().perfil === "object") ? lePerfil(snap.data().perfil) : perfil;
+            writeLocal();
+            paint();
+          }
+          else if (Object.keys(done).length) return dbDoc.set({ done: done, habits: habits, perfil: perfil });
+          return null;
+        }).then(function () { $("saveNote").textContent = "Progresso salvo na sua conta."; });
+      });
+    }).catch(function () {
+      dbDoc = null;
+      $("saveNote").textContent = "Progresso salvo só neste navegador.";
+    });
+  }
+
+  /* troca de tela sem sair da página */
+  function show(view) {
+    ["home", "python", "perfil"].forEach(function (v) { $(v).hidden = v !== view; });
+    $("homeFoot").hidden = view !== "home";
+    if (view === "home") { window.scrollTo(0, 0); }
+    else { $(view).scrollIntoView({ block: "start" }); }
+    if (view === "perfil") { renderPerfil(); }
+    if (history.replaceState) history.replaceState(null, "", view === "home" ? "#" : "#" + view);
+  }
+  document.addEventListener("click", function (ev) {
+    var t = ev.target.closest ? ev.target.closest("[data-go]") : null;
+    if (!t) return;
+    ev.preventDefault();
+    show(t.getAttribute("data-go"));
+  });
+  $("python").addEventListener("click", function (ev) {
+    if (ev.target && ev.target.id === "toggleDone") {
+      var k = ev.target.dataset.key;
+      if (done[k]) delete done[k]; else done[k] = true;
+      paint();
+      save();
+    }
+  });
+
+  /* filtro de cursos */
+  var cards = Array.prototype.slice.call(document.querySelectorAll(".card"));
+  var tabs = Array.prototype.slice.call(document.querySelectorAll(".tab"));
+  var input = $("q");
+  var vazio = $("vazio");
+  var cat = "todos";
+  function norm(s) { return (s || "").toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, ""); }
+  function apply() {
+    var termo = norm(input.value).trim();
+    var visiveis = 0;
+    cards.forEach(function (c) {
+      var okCat = cat === "todos" || norm(c.getAttribute("data-cat")).indexOf(norm(cat)) !== -1;
+      var okTxt = !termo || norm(c.getAttribute("data-title") + " " + c.textContent).indexOf(termo) !== -1;
+      var show = okCat && okTxt;
+      c.hidden = !show;
+      if (show) visiveis += 1;
+    });
+    vazio.hidden = visiveis !== 0;
+  }
+  tabs.forEach(function (t) {
+    t.addEventListener("click", function () {
+      cat = t.getAttribute("data-cat");
+      tabs.forEach(function (x) { x.setAttribute("aria-selected", x === t ? "true" : "false"); });
+      apply();
+    });
+  });
+  input.addEventListener("input", apply);
+  $("go").addEventListener("click", apply);
+
+  /* início */
+  buildPython();
+  $("editNome").addEventListener("click", function () {
+    var f = $("nomeForm"), inp = $("nomeInput");
+    inp.value = perfil.nome || "Gabriel";
+    f.hidden = false;
+    inp.focus();
+    inp.select();
+  });
+  $("nomeForm").addEventListener("submit", function (ev) {
+    ev.preventDefault();
+    var v = $("nomeInput").value.trim().slice(0, 24);
+    perfil.nome = v || "Gabriel";
+    $("nomeForm").hidden = true;
+    paint();
+    save();
+  });
+  $("nomeInput").addEventListener("keydown", function (ev) {
+    if (ev.key === "Escape") $("nomeForm").hidden = true;
+  });
+  $("fotoInput").addEventListener("change", function (ev) {
+    var f = ev.target.files && ev.target.files[0];
+    ev.target.value = "";
+    if (!f || f.type.indexOf("image/") !== 0) return;
+    resizeFoto(f, function (data) {
+      if (!data) return;
+      perfil.foto = data;
+      paint();
+      save();
+    });
+  });
+  $("perfil").addEventListener("click", function (ev) {
+    var b = ev.target.closest ? ev.target.closest("button[data-m]") : null;
+    if (b) toggleMissao(b.dataset.m);
+  });
+  var local = readLocal();
+  if (local) done = local;
+  try {
+    var raw = localStorage.getItem(LS_KEY);
+    var parsed = raw ? JSON.parse(raw) : null;
+    if (parsed && parsed.habits && typeof parsed.habits === "object") habits = parsed.habits;
+    if (parsed && parsed.perfil && typeof parsed.perfil === "object") perfil = lePerfil(parsed.perfil);
+  } catch (e) { /* sem armazenamento */ }
+  paint();
+  connect();
+  var h = location.hash.slice(1);
+  if (h === "python" || h === "perfil") show(h);
+})();
+</script>
+
+</body></html>
