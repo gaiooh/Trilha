@@ -696,7 +696,7 @@ footer {
           <div class="meta"><span class="pill">Backend</span><span>19 partes · 14,6 h</span></div>
           <h3>FastAPI: do zero ao deploy</h3>
           <p>Corey Schafer. APIs, validação, banco de dados, autenticação e deploy com Docker.</p>
-          <div class="card-foot"><span>Corey Schafer</span><button type="button" data-go="python">Abrir aulas →</button></div>
+          <div class="card-foot"><span>Corey Schafer</span><button type="button" data-go="fastapi">Abrir aulas →</button></div>
         </div>
       </article>
 
@@ -749,8 +749,8 @@ footer {
 
     <header class="py-head">
       <div>
-        <h1>Python e <em>FastAPI em aulas</em></h1>
-        <p>Python (Mundos 1 a 3 do Guanabara) e FastAPI (Corey Schafer), na ordem das playlists, em sessões de cerca de 1 hora. Toque em uma aula para ver os vídeos e o que você vai aprender.</p>
+        <h1>Python <em>em aulas</em></h1>
+        <p>Mundos 1 a 3 do Guanabara, na ordem da playlist, em sessões de cerca de 1 hora. Toque em uma aula para ver os vídeos e o que você vai aprender.</p>
       </div>
       <span class="py-count" id="pyCount">0 de 35 aulas</span>
     </header>
@@ -762,6 +762,27 @@ footer {
     <footer>
       <span>Os vídeos são do canal Curso em Vídeo. Abrem no YouTube.</span>
       <span id="saveNote">Carregando seu progresso...</span>
+    </footer>
+  </div>
+
+  <!-- TELA 2b: aulas de FastAPI -->
+  <div id="fastapi" hidden>
+    <button class="back" type="button" data-go="home">← Voltar aos cursos</button>
+
+    <header class="py-head">
+      <div>
+        <h1>FastAPI <em>em aulas</em></h1>
+        <p>As 19 partes da playlist do Corey Schafer, agrupadas em sessões de cerca de 1 hora. Toque em uma aula para ver os vídeos e o que você vai aprender.</p>
+      </div>
+      <span class="py-count" id="faCount">0 de 15 aulas</span>
+    </header>
+
+    <div id="faMundos"></div>
+
+    <section class="detail" id="faDetail" hidden aria-live="polite"></section>
+
+    <footer>
+      <span>Os vídeos são do canal de Corey Schafer. Tocam aqui na página.</span>
     </footer>
   </div>
 
@@ -984,9 +1005,10 @@ footer {
       fotoEl.removeAttribute("src");
       $("avatarLetra").hidden = false;
     }
-    var totalAulas = aulas.length || 1;
-    var pyDone = 0;
-    aulas.forEach(function (a) { if (done[a.key]) pyDone += 1; });
+    var pyTot = aulas.filter(function (a) { return a.mundo < 3; }).length || 1;
+    var faTot = aulas.filter(function (a) { return a.mundo === 3; }).length || 1;
+    var pyDone = 0, faDone = 0;
+    aulas.forEach(function (a) { if (done[a.key]) { if (a.mundo === 3) faDone += 1; else pyDone += 1; } });
 
     var missoesFeitas = 0;
     Object.keys(habits).forEach(function (d) { missoesFeitas += contaDia(d); });
@@ -994,7 +1016,7 @@ footer {
     for (i = 0; i < 7; i++) { if (contaDia(diaKey(i)) > 0) dias7 += 1; }
     for (j = 0; j < 30; j++) { if ((habits[diaKey(j)] || {}).audio) audio30 += 1; }
 
-    var xp = pyDone * 100 + missoesFeitas * 20;
+    var xp = (pyDone + faDone) * 100 + missoesFeitas * 20;
     var nivel = Math.floor(xp / 400) + 1;
     $("nivel").textContent = String(nivel);
     $("titulo").textContent = TITULOS[Math.min(nivel - 1, TITULOS.length - 1)];
@@ -1003,7 +1025,8 @@ footer {
     $("xpNext").textContent = "faltam " + (400 - (xp % 400)) + " XP para o nível " + (nivel + 1);
 
     var stats = [
-      ["Cursos", pyDone / totalAulas * 100, pyDone + " de " + totalAulas + " aulas"],
+      ["Python", pyDone / pyTot * 100, pyDone + " de " + pyTot + " aulas"],
+      ["FastAPI", faDone / faTot * 100, faDone + " de " + faTot + " aulas"],
       ["Disciplina", dias7 / 7 * 100, dias7 + " de 7 dias"],
       ["Comunicação", Math.min(100, audio30 / 15 * 100), audio30 + " áudios"]
     ];
@@ -1055,15 +1078,17 @@ footer {
 
     var sk = $("skills");
     sk.innerHTML = "";
-    var row2 = el("div", "skill-row");
-    row2.appendChild(el("span", null, "Cursos"));
-    row2.appendChild(el("small", null, pyDone + " de " + totalAulas + " aulas"));
-    sk.appendChild(row2);
-    var sb = el("div", "skill-bar");
-    var sf = el("i");
-    sf.style.width = (pyDone / totalAulas * 100) + "%";
-    sb.appendChild(sf);
-    sk.appendChild(sb);
+    [["Python", pyDone, pyTot], ["FastAPI", faDone, faTot]].forEach(function (s) {
+      var rowS = el("div", "skill-row");
+      rowS.appendChild(el("span", null, s[0]));
+      rowS.appendChild(el("small", null, s[1] + " de " + s[2] + " aulas"));
+      sk.appendChild(rowS);
+      var sbS = el("div", "skill-bar");
+      var sfS = el("i");
+      sfS.style.width = (s[1] / s[2] * 100) + "%";
+      sbS.appendChild(sfS);
+      sk.appendChild(sbS);
+    });
   }
 
   function $(id) { return document.getElementById(id); }
@@ -1101,8 +1126,8 @@ footer {
 
   function buildPython() {
     agrupar();
-    var wrap = $("pyMundos");
     MUNDOS.forEach(function (m, mi) {
+      var wrap = $(mi === 3 ? "faMundos" : "pyMundos");
       wrap.appendChild(el("h2", "mundo-title", m.nome));
       var n = aulas.filter(function (a) { return a.mundo === mi; }).length;
       var horas = aulas.filter(function (a) { return a.mundo === mi; }).reduce(function (s, a) { return s + a.total; }, 0);
@@ -1119,7 +1144,7 @@ footer {
         top.appendChild(el("span", "sq-tag", a.videos.length + (a.videos.length > 1 ? " vídeos" : " vídeo")));
         b.appendChild(top);
         b.appendChild(el("span", "sq-check", "✓"));
-        b.appendChild(el("h3", "sq-title", a.videos[0][1].replace(/^(Curso|Exercício) Python #?/, "").replace(/^(\d+)\s*-\s*/, "$1 · ").slice(0, 60)));
+        b.appendChild(el("h3", "sq-title", a.videos[0][1].replace(/^Python FastAPI Tutorial /, "").replace(/^\(Part (\d+)\):\s*/, "Parte $1 · ").replace(/^(Curso|Exercício) Python #?/, "").replace(/^(\d+)\s*-\s*/, "$1 · ").slice(0, 60)));
         b.appendChild(el("p", "sq-desc", a.aprende));
         b.appendChild(el("span", "sq-time", "~ " + fmt(a.total)));
         grid.appendChild(b);
@@ -1127,7 +1152,7 @@ footer {
       });
       wrap.appendChild(grid);
     });
-    $("pyMundos").addEventListener("click", function (ev) {
+    document.addEventListener("click", function (ev) {
       var b = ev.target.closest ? ev.target.closest("button.sq") : null;
       if (!b) return;
       select(b.dataset.key);
@@ -1142,8 +1167,8 @@ footer {
   /* Toca o vídeo dentro da página, com o player incorporado do YouTube (sem chave de API). */
   function tocar(id, pick, items) {
     items.forEach(function (x) { x.setAttribute("aria-pressed", x === pick ? "true" : "false"); });
-    var d = $("detail");
-    var p = d && d.querySelector(".player");
+    var box = pick.closest(".detail");
+    var p = box && box.querySelector(".player");
     if (!p) return;
     p.innerHTML = "";
     var f = el("iframe");
@@ -1161,7 +1186,7 @@ footer {
     if (!a) return;
     selected = k;
     aulas.forEach(function (x) { if (x.el) x.el.setAttribute("aria-pressed", x.key === k ? "true" : "false"); });
-    var d = $("detail");
+    var d = $(a.mundo === 3 ? "faDetail" : "detail");
     d.innerHTML = "";
     d.hidden = false;
     d.appendChild(el("p", "aula-n", "AULA " + a.n + " · " + MUNDOS[a.mundo].nome));
@@ -1217,7 +1242,12 @@ footer {
         a.el.querySelector(".sq-check").textContent = on ? "✓" : "";
       }
     });
-    $("pyCount").textContent = feitas + " de " + aulas.length + " aulas";
+    var pyTot = aulas.filter(function (a) { return a.mundo < 3; }).length;
+    var faTot = aulas.length - pyTot;
+    var pyFe = aulas.filter(function (a) { return a.mundo < 3 && done[a.key]; }).length;
+    var faFe = aulas.filter(function (a) { return a.mundo === 3 && done[a.key]; }).length;
+    $("pyCount").textContent = pyFe + " de " + pyTot + " aulas";
+    $("faCount").textContent = faFe + " de " + faTot + " aulas";
     $("homeBar").style.width = (aulas.length ? feitas / aulas.length * 100 : 0) + "%";
     var b = $("toggleDone");
     if (b) {
@@ -1283,7 +1313,7 @@ footer {
 
   /* troca de tela sem sair da página */
   function show(view) {
-    ["home", "python", "perfil"].forEach(function (v) { $(v).hidden = v !== view; });
+    ["home", "python", "fastapi", "perfil"].forEach(function (v) { $(v).hidden = v !== view; });
     $("homeFoot").hidden = view !== "home";
     if (view === "home") { window.scrollTo(0, 0); }
     else { $(view).scrollIntoView({ block: "start" }); }
@@ -1380,6 +1410,6 @@ footer {
   paint();
   connect();
   var h = location.hash.slice(1);
-  if (h === "python" || h === "perfil") show(h);
+  if (h === "python" || h === "fastapi" || h === "perfil") show(h);
 })();
 </script>
