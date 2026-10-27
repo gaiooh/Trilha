@@ -473,6 +473,63 @@ a { color: inherit; }
 }
 .detail a.ext:hover { color: var(--accent); border-color: var(--accent); text-decoration: none; }
 
+/* escolha de mundos, abas e lista de exercícios */
+.mundo-cards { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1rem; margin-top: 1.5rem; }
+.mundo-card {
+  display: flex; flex-direction: column; align-items: flex-start; gap: .4rem;
+  text-align: left; cursor: pointer;
+  background: var(--panel); color: var(--ink);
+  border: 1px solid var(--line); border-radius: 20px;
+  padding: 1.2rem;
+  box-shadow: 0 0 28px rgba(166,140,255,.12);
+  font: inherit; min-width: 0;
+}
+.mundo-card:hover { border-color: var(--accent); }
+.mc-num { font-size: .72rem; font-weight: 900; letter-spacing: .14em; color: var(--accent); }
+.mc-title { margin: 0; font-size: 1.25rem; line-height: 1.2; }
+.mc-sub { margin: 0; font-size: .85rem; color: var(--muted); }
+.mc-bar { display: block; width: 100%; height: .5rem; background: var(--panel-2); border-radius: 999px; overflow: hidden; margin-top: .4rem; }
+.mc-bar i { display: block; height: 100%; width: 0; background: linear-gradient(90deg, var(--accent), var(--hot)); }
+.mc-count { font-size: .8rem; color: var(--muted); }
+.tabs-mundo { display: flex; gap: .5rem; margin: 1.2rem 0 1rem; flex-wrap: wrap; }
+.tabs-mundo button {
+  font: 800 .9rem var(--font-body);
+  color: var(--muted); background: var(--panel-2);
+  border: 1px solid var(--line); border-radius: 999px;
+  padding: .5rem 1rem; cursor: pointer;
+}
+.tabs-mundo button[aria-selected="true"] { color: var(--accent-ink); background: var(--accent); border-color: var(--accent); }
+.ex-item {
+  width: 100%; display: grid; grid-template-columns: auto 1fr auto; gap: .6rem; align-items: center;
+  text-align: left; font: 700 .92rem/1.3 var(--font-body); color: var(--ink);
+  background: var(--panel); border: 1px solid var(--line); border-radius: 14px;
+  padding: .7rem .9rem; margin-bottom: .5rem; cursor: pointer;
+}
+.ex-item:hover { border-color: var(--accent); }
+.ex-n { font-family: ui-monospace, Consolas, monospace; color: var(--accent); font-size: .8rem; }
+.ex-t { min-width: 0; overflow-wrap: anywhere; }
+.ex-go { font-size: .78rem; color: var(--muted); white-space: nowrap; }
+.rec-title { margin: 1.2rem 0 .5rem; font-size: 1rem; }
+.rec-list { list-style: none; margin: 0; padding: 0; display: grid; gap: .4rem; }
+.rec-item {
+  width: 100%; display: flex; gap: .6rem; align-items: center; text-align: left;
+  font: 600 .9rem/1.3 var(--font-body); color: var(--ink);
+  background: var(--panel-2); border: 1px solid var(--line); border-radius: 12px;
+  padding: .55rem .8rem; cursor: pointer;
+}
+.rec-item:hover { border-color: var(--accent); }
+.proximas { margin-top: 2rem; }
+.prox-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: .6rem; }
+.prox-item {
+  display: grid; gap: .3rem; text-align: left; cursor: pointer;
+  font: inherit; color: var(--ink);
+  background: var(--panel); border: 1px solid var(--line); border-radius: 14px;
+  padding: .7rem .8rem; min-width: 0;
+}
+.prox-item:hover { border-color: var(--accent); }
+.prox-t { font-weight: 800; font-size: .88rem; line-height: 1.25; overflow-wrap: anywhere; }
+@media (max-width: 760px) { .mundo-cards { grid-template-columns: 1fr; } }
+
 /* tipografia: Nunito arredondada, em negrito nos títulos */
 h1, h2, h3, h4 { font-weight: 900; letter-spacing: -.01em; }
 em { font-style: normal; font-weight: 900; }
@@ -749,68 +806,45 @@ footer {
     <p class="empty" id="vazio" hidden>Nenhum curso com esse termo. Tente outro tema.</p>
   </div>
 
-  <!-- TELA 2: aulas de Python -->
-  <div id="python" hidden>
+  <!-- TELA 2: escolha do mundo (Python) -->
+  <div id="pymundos" hidden>
     <button class="back" type="button" data-go="home">← Voltar aos cursos</button>
-
     <header class="py-head">
       <div>
-        <h1>Python <em>em aulas</em></h1>
-        <p>Mundos 1 a 3 do Guanabara, na ordem da playlist, em sessões de cerca de 1 hora. Toque em uma aula para ver os vídeos e o que você vai aprender.</p>
+        <h1>Python <em>por mundos</em></h1>
+        <p>Escolha um mundo do Guanabara. Em cada um você tem as aulas e a lista de exercícios.</p>
       </div>
-      <span class="py-count" id="pyCount">0 de 35 aulas</span>
     </header>
+    <div class="mundo-cards" id="mundoCards"></div>
+  </div>
 
-    <div id="pyMundos"></div>
-
-    <section class="detail" id="detail" hidden aria-live="polite"></section>
-
+  <!-- TELA 2b: um mundo, com aulas e lista de exercícios -->
+  <div id="mundo" hidden>
+    <button class="back" type="button" id="mundoVoltar" data-go="python">← Voltar</button>
+    <header class="py-head">
+      <div>
+        <h1 id="mundoTitulo">Mundo</h1>
+        <p>Toque em uma aula para assistir. Ela abre numa tela própria, com as próximas aulas no fim.</p>
+      </div>
+      <span class="py-count" id="mundoCount"></span>
+    </header>
+    <div class="tabs-mundo" role="tablist">
+      <button type="button" role="tab" data-tab="aulas" aria-selected="true">Aulas</button>
+      <button type="button" role="tab" data-tab="lista" aria-selected="false" id="tabListaBtn">Lista de exercícios</button>
+    </div>
+    <div id="tabAulas"><div class="squares" id="squares"></div></div>
+    <div id="tabLista" hidden></div>
     <footer>
-      <span>Os vídeos são do canal Curso em Vídeo. Abrem no YouTube.</span>
+      <span>Os vídeos são do canal Curso em Vídeo. Abrem aqui na página.</span>
       <span id="saveNote">Carregando seu progresso...</span>
     </footer>
   </div>
 
-  <!-- TELA 2b: aulas de FastAPI -->
-  <div id="fastapi" hidden>
-    <button class="back" type="button" data-go="home">← Voltar aos cursos</button>
-
-    <header class="py-head">
-      <div>
-        <h1>FastAPI <em>em aulas</em></h1>
-        <p>As 19 partes da playlist do Corey Schafer, agrupadas em sessões de cerca de 1 hora. Toque em uma aula para ver os vídeos e o que você vai aprender.</p>
-      </div>
-      <span class="py-count" id="faCount">0 de 15 aulas</span>
-    </header>
-
-    <div id="faMundos"></div>
-
-    <section class="detail" id="faDetail" hidden aria-live="polite"></section>
-
-    <footer>
-      <span>Os vídeos são do canal de Corey Schafer. Tocam aqui na página.</span>
-    </footer>
-  </div>
-
-  <!-- TELA 2c: aulas de Git e GitHub -->
-  <div id="git" hidden>
-    <button class="back" type="button" data-go="home">← Voltar aos cursos</button>
-
-    <header class="py-head">
-      <div>
-        <h1>Git e GitHub <em>em aulas</em></h1>
-        <p>Os 13 vídeos da playlist do Curso em Vídeo, agrupados em sessões de cerca de 1 hora. Toque em uma aula para ver os vídeos e o que você vai aprender.</p>
-      </div>
-      <span class="py-count" id="gitCount">0 de 10 aulas</span>
-    </header>
-
-    <div id="gitMundos"></div>
-
-    <section class="detail" id="gitDetail" hidden aria-live="polite"></section>
-
-    <footer>
-      <span>Os vídeos são do canal Curso em Vídeo. Tocam aqui na página.</span>
-    </footer>
+  <!-- TELA 2c: uma aula, com as próximas no fim -->
+  <div id="aula" hidden>
+    <button class="back" type="button" id="aulaVoltar">← Voltar</button>
+    <section class="detail" id="aulaTopo"></section>
+    <section class="proximas" id="aulaProx"></section>
   </div>
 
   <!-- TELA 3: perfil -->
@@ -1172,39 +1206,132 @@ footer {
     });
   }
 
+  var MUNDO_ATUAL = 0;
+
+  /* Exercício do Guanabara: "Exercício Python #036 - Nome" */
+  function exNum(t) {
+    var m = t.match(/Exerc[ií]cio Python #(\d+) - (.*)$/);
+    return m ? { n: m[1], nome: m[2] } : null;
+  }
+  function tituloCurto(t) {
+    return t.replace(/ - Curso de Git e GitHub$/, "").replace(/^Python FastAPI Tutorial /, "")
+      .replace(/^\(Part (\d+)\):\s*/, "Parte $1 · ").replace(/^(Curso|Exercício) Python #?/, "")
+      .replace(/^(\d+)\s*-\s*/, "$1 · ").slice(0, 60);
+  }
+
+  /* Cards dos mundos do Python */
+  function renderMundoCards() {
+    var wrap = $("mundoCards");
+    if (!wrap) return;
+    wrap.innerHTML = "";
+    MUNDOS.forEach(function (m, mi) {
+      if (mi > 2) return;
+      var lst = aulas.filter(function (a) { return a.mundo === mi; });
+      var feitas = lst.filter(function (a) { return done[a.key]; }).length;
+      var horas = lst.reduce(function (s, a) { return s + a.total; }, 0);
+      var ex = m.videos.filter(function (v) { return exNum(v[1]); }).length;
+      var card = el("button", "mundo-card");
+      card.type = "button";
+      card.dataset.mundo = String(mi);
+      card.appendChild(el("span", "mc-num", "MUNDO " + (mi + 1)));
+      card.appendChild(el("h3", "mc-title", m.nome.replace(/^Mundo \d · /, "")));
+      card.appendChild(el("p", "mc-sub", lst.length + " aulas · " + fmt(horas) + " de vídeo · " + ex + " exercícios"));
+      var bar = el("span", "mc-bar");
+      var fill = el("i");
+      fill.style.width = (lst.length ? feitas / lst.length * 100 : 0) + "%";
+      bar.appendChild(fill);
+      card.appendChild(bar);
+      card.appendChild(el("span", "mc-count", feitas + " de " + lst.length + " concluídas"));
+      wrap.appendChild(card);
+    });
+  }
+
+  function setAba(nome) {
+    $("tabAulas").hidden = nome !== "aulas";
+    $("tabLista").hidden = nome !== "lista";
+    document.querySelectorAll(".tabs-mundo button").forEach(function (b) {
+      b.setAttribute("aria-selected", b.dataset.tab === nome ? "true" : "false");
+    });
+  }
+
+  /* Tela de um mundo (ou de FastAPI/Git): abas Aulas e Lista de exercícios */
+  function abrirMundo(mi) {
+    MUNDO_ATUAL = mi;
+    var m = MUNDOS[mi];
+    var lst = aulas.filter(function (a) { return a.mundo === mi; });
+    $("mundoTitulo").textContent = m.nome;
+    $("mundoVoltar").setAttribute("data-go", mi < 3 ? "python" : "home");
+
+    var sq = $("squares");
+    sq.innerHTML = "";
+    lst.forEach(function (a) {
+      var b = el("button", "sq");
+      b.type = "button";
+      b.dataset.key = a.key;
+      b.setAttribute("aria-pressed", "false");
+      b.setAttribute("aria-label", "Aula " + a.n + ": " + a.videos[0][1]);
+      var top = el("div", "sq-top");
+      top.appendChild(el("span", "sq-num", String(a.n)));
+      top.appendChild(el("span", "sq-tag", a.videos.length + (a.videos.length > 1 ? " vídeos" : " vídeo")));
+      b.appendChild(top);
+      b.appendChild(el("span", "sq-check", "✓"));
+      b.appendChild(el("h3", "sq-title", tituloCurto(a.videos[0][1])));
+      b.appendChild(el("p", "sq-desc", a.aprende));
+      b.appendChild(el("span", "sq-time", "~ " + fmt(a.total)));
+      sq.appendChild(b);
+      a.el = b;
+    });
+
+    var ex = [];
+    lst.forEach(function (a) {
+      a.videos.forEach(function (v) {
+        var x = exNum(v[1]);
+        if (x) ex.push({ n: x.n, nome: x.nome, key: a.key, id: v[0], aulaN: a.n });
+      });
+    });
+    var lista = $("tabLista");
+    lista.innerHTML = "";
+    ex.forEach(function (x) {
+      var b = el("button", "ex-item");
+      b.type = "button";
+      b.dataset.key = x.key;
+      b.dataset.vid = x.id;
+      b.appendChild(el("span", "ex-n", "#" + x.n));
+      b.appendChild(el("span", "ex-t", x.nome));
+      b.appendChild(el("span", "ex-go", "Aula " + x.aulaN + " →"));
+      lista.appendChild(b);
+    });
+    if (!ex.length) lista.appendChild(el("p", "muted-note", "Este curso não tem lista de exercícios."));
+    $("tabListaBtn").hidden = ex.length === 0;
+    setAba("aulas");
+    show("mundo");
+    paint();
+  }
+
   function buildPython() {
     agrupar();
-    MUNDOS.forEach(function (m, mi) {
-      var wrap = $(["pyMundos", "pyMundos", "pyMundos", "faMundos", "gitMundos"][mi]);
-      wrap.appendChild(el("h2", "mundo-title", m.nome));
-      var n = aulas.filter(function (a) { return a.mundo === mi; }).length;
-      var horas = aulas.filter(function (a) { return a.mundo === mi; }).reduce(function (s, a) { return s + a.total; }, 0);
-      wrap.appendChild(el("p", "mundo-sub", n + " aulas · " + fmt(horas) + " de vídeo"));
-      var grid = el("div", "squares");
-      aulas.filter(function (a) { return a.mundo === mi; }).forEach(function (a) {
-        var b = el("button", "sq");
-        b.type = "button";
-        b.dataset.key = a.key;
-        b.setAttribute("aria-pressed", "false");
-        b.setAttribute("aria-label", "Aula " + a.n + ": " + a.videos[0][1]);
-        var top = el("div", "sq-top");
-        top.appendChild(el("span", "sq-num", String(a.n)));
-        top.appendChild(el("span", "sq-tag", a.videos.length + (a.videos.length > 1 ? " vídeos" : " vídeo")));
-        b.appendChild(top);
-        b.appendChild(el("span", "sq-check", "✓"));
-        b.appendChild(el("h3", "sq-title", a.videos[0][1].replace(/ - Curso de Git e GitHub$/, "").replace(/^Python FastAPI Tutorial /, "").replace(/^\(Part (\d+)\):\s*/, "Parte $1 · ").replace(/^(Curso|Exercício) Python #?/, "").replace(/^(\d+)\s*-\s*/, "$1 · ").slice(0, 60)));
-        b.appendChild(el("p", "sq-desc", a.aprende));
-        b.appendChild(el("span", "sq-time", "~ " + fmt(a.total)));
-        grid.appendChild(b);
-        a.el = b;
-      });
-      wrap.appendChild(grid);
+    renderMundoCards();
+    $("mundoCards").addEventListener("click", function (ev) {
+      var c = ev.target.closest ? ev.target.closest("button.mundo-card") : null;
+      if (c) abrirMundo(Number(c.dataset.mundo));
     });
-    document.addEventListener("click", function (ev) {
+    document.querySelector(".tabs-mundo").addEventListener("click", function (ev) {
+      var b = ev.target.closest ? ev.target.closest("button[data-tab]") : null;
+      if (b) setAba(b.dataset.tab);
+    });
+    $("squares").addEventListener("click", function (ev) {
       var b = ev.target.closest ? ev.target.closest("button.sq") : null;
-      if (!b) return;
-      select(b.dataset.key);
+      if (b) openAula(b.dataset.key);
     });
+    $("tabLista").addEventListener("click", function (ev) {
+      var b = ev.target.closest ? ev.target.closest("button.ex-item") : null;
+      if (b) openAula(b.dataset.key, b.dataset.vid);
+    });
+    $("aulaProx").addEventListener("click", function (ev) {
+      var b = ev.target.closest ? ev.target.closest("button.prox-item") : null;
+      if (b) openAula(b.dataset.key);
+    });
+    $("aulaVoltar").addEventListener("click", function () { abrirMundo(MUNDO_ATUAL); });
   }
 
   function aulaByKey(k) {
@@ -1229,22 +1356,24 @@ footer {
     p.appendChild(f);
   }
 
-  function select(k) {
+  /* Tela de uma aula: player e lista de vídeos no topo, próximas aulas no fim */
+  function openAula(k, vid) {
     var a = aulaByKey(k);
     if (!a) return;
     selected = k;
-    aulas.forEach(function (x) { if (x.el) x.el.setAttribute("aria-pressed", x.key === k ? "true" : "false"); });
-    var d = $(["detail", "detail", "detail", "faDetail", "gitDetail"][a.mundo]);
-    d.innerHTML = "";
-    d.hidden = false;
-    d.appendChild(el("p", "aula-n", "AULA " + a.n + " · " + MUNDOS[a.mundo].nome));
-    d.lastChild.style.cssText = "margin:0;font-family:ui-monospace,monospace;font-size:.8rem;color:var(--accent)";
-    d.appendChild(el("h2", null, "Aula " + a.n + " · " + fmt(a.total)));
+    MUNDO_ATUAL = a.mundo;
+    $("aulaVoltar").textContent = "← Voltar a " + MUNDOS[a.mundo].nome.replace(/^Mundo \d · /, "");
+
+    var topo = $("aulaTopo");
+    topo.innerHTML = "";
+    topo.appendChild(el("p", "aula-n", "AULA " + a.n + " · " + MUNDOS[a.mundo].nome));
+    topo.appendChild(el("h2", null, "Aula " + a.n + " · " + fmt(a.total)));
     var learn = el("p", "learn");
     learn.appendChild(el("b", null, "O que você aprende: "));
     learn.appendChild(document.createTextNode(a.aprende));
-    d.appendChild(learn);
-    d.appendChild(el("div", "player"));
+    topo.appendChild(learn);
+    topo.appendChild(el("div", "player"));
+
     var ul = el("ul");
     var items = [];
     a.videos.forEach(function (v) {
@@ -1266,8 +1395,29 @@ footer {
       items.push(pick);
       ul.appendChild(li);
     });
-    d.appendChild(ul);
-    if (a.videos.length) tocar(a.videos[0][0], items[0], items);
+    topo.appendChild(ul);
+
+    var exs = [];
+    a.videos.forEach(function (v, i) {
+      var x = exNum(v[1]);
+      if (x) exs.push({ v: v, i: i, x: x });
+    });
+    if (exs.length) {
+      topo.appendChild(el("h3", "rec-title", "Exercícios recomendados nesta aula"));
+      var rl = el("ul", "rec-list");
+      exs.forEach(function (o) {
+        var li = el("li");
+        var b = el("button", "rec-item");
+        b.type = "button";
+        b.appendChild(el("span", "ex-n", "#" + o.x.n));
+        b.appendChild(el("span", "ex-t", o.x.nome));
+        b.addEventListener("click", function () { tocar(o.v[0], items[o.i], items); });
+        li.appendChild(b);
+        rl.appendChild(li);
+      });
+      topo.appendChild(rl);
+    }
+
     var act = el("div", "actions");
     var btn = el("button", "btn", "Marcar como concluída");
     btn.type = "button";
@@ -1275,9 +1425,30 @@ footer {
     btn.dataset.key = k;
     act.appendChild(btn);
     act.appendChild(el("span", "saved", "Faça os exercícios antes de marcar."));
-    d.appendChild(act);
+    topo.appendChild(act);
+
+    var foco = vid ? a.videos.findIndex(function (v) { return v[0] === vid; }) : 0;
+    if (foco < 0) foco = 0;
+    if (a.videos.length) tocar(a.videos[foco][0], items[foco], items);
+
+    var prox = $("aulaProx");
+    prox.innerHTML = "";
+    var resto = aulas.filter(function (x) { return x.mundo === a.mundo && x.n > a.n; });
+    prox.appendChild(el("h3", "rec-title", resto.length ? "Próximas aulas" : "Você chegou à última aula deste mundo"));
+    var grid = el("div", "prox-grid");
+    resto.forEach(function (x) {
+      var b = el("button", "prox-item");
+      b.type = "button";
+      b.dataset.key = x.key;
+      b.appendChild(el("span", "sq-num", String(x.n)));
+      b.appendChild(el("span", "prox-t", tituloCurto(x.videos[0][1])));
+      b.appendChild(el("span", "sq-time", "~ " + fmt(x.total)));
+      grid.appendChild(b);
+    });
+    prox.appendChild(grid);
+
+    show("aula");
     paint();
-    d.scrollIntoView({ behavior: "smooth", block: "start" });
   }
 
   function paint() {
@@ -1290,23 +1461,19 @@ footer {
         a.el.querySelector(".sq-check").textContent = on ? "✓" : "";
       }
     });
-    var grupos = { pyCount: [0, 0], faCount: [0, 0], gitCount: [0, 0] };
-    var idCurso = ["pyCount", "pyCount", "pyCount", "faCount", "gitCount"];
-    aulas.forEach(function (a) {
-      var g = grupos[idCurso[a.mundo]];
-      g[1] += 1;
-      if (done[a.key]) g[0] += 1;
-    });
-    Object.keys(grupos).forEach(function (k) {
-      $(k).textContent = grupos[k][0] + " de " + grupos[k][1] + " aulas";
-    });
+    if (MUNDO_ATUAL >= 0 && $("mundoCount")) {
+      var lst = aulas.filter(function (a) { return a.mundo === MUNDO_ATUAL; });
+      var f = lst.filter(function (a) { return done[a.key]; }).length;
+      $("mundoCount").textContent = f + " de " + lst.length + " aulas";
+    }
     $("homeBar").style.width = (aulas.length ? feitas / aulas.length * 100 : 0) + "%";
     var b = $("toggleDone");
     if (b) {
-      var on = !!done[b.dataset.key];
-      b.setAttribute("aria-pressed", on ? "true" : "false");
-      b.textContent = on ? "Concluída · desfazer" : "Marcar como concluída";
+      var on2 = !!done[b.dataset.key];
+      b.setAttribute("aria-pressed", on2 ? "true" : "false");
+      b.textContent = on2 ? "Concluída · desfazer" : "Marcar como concluída";
     }
+    renderMundoCards();
     renderPerfil();
   }
 
@@ -1365,7 +1532,10 @@ footer {
 
   /* troca de tela sem sair da página */
   function show(view) {
-    ["home", "python", "fastapi", "git", "perfil"].forEach(function (v) { $(v).hidden = v !== view; });
+    if (view === "python") { view = "pymundos"; renderMundoCards(); }
+    else if (view === "fastapi") { abrirMundo(3); return; }
+    else if (view === "git") { abrirMundo(4); return; }
+    ["home", "pymundos", "mundo", "aula", "perfil"].forEach(function (v) { $(v).hidden = v !== view; });
     $("homeFoot").hidden = view !== "home";
     if (view === "home") { window.scrollTo(0, 0); }
     else { $(view).scrollIntoView({ block: "start" }); }
@@ -1378,13 +1548,13 @@ footer {
     ev.preventDefault();
     show(t.getAttribute("data-go"));
   });
-  $("python").addEventListener("click", function (ev) {
-    if (ev.target && ev.target.id === "toggleDone") {
-      var k = ev.target.dataset.key;
-      if (done[k]) delete done[k]; else done[k] = true;
-      paint();
-      save();
-    }
+  document.addEventListener("click", function (ev) {
+    var b = ev.target.closest ? ev.target.closest("#toggleDone") : null;
+    if (!b) return;
+    var k = b.dataset.key;
+    if (done[k]) delete done[k]; else done[k] = true;
+    paint();
+    save();
   });
 
   /* filtro de cursos */
