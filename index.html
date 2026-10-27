@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Biscotteca — Cookies Artesanais</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,900&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --brown:#8B6A3E;
+    --brown-dark:#4A3526;
+    --beige:#E9D9C0;
+    --cream:#FBF3E7;
+    --white:#FFFFFF;
+    --black:#1E1E1E;
+    --pink:#F7D6DD;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    font-family:'Poppins',sans-serif;
+    color:var(--black);
+    background:var(--cream);
+    overflow-x:hidden;
+  }
+  h1,h2,h3{font-family:'Fraunces',serif;}
+  .script{font-family:'Pacifico',cursive; font-weight:400;}
+  a{text-decoration:none;color:inherit;}
+  img{max-width:100%;display:block;}
+  .wrap{max-width:1180px;margin:0 auto;padding:0 28px;}
+
+  /* ---------- crumbs bg ---------- */
+  .crumb{position:absolute;border-radius:50%;background:var(--brown);opacity:.15;}
+
+  /* ---------- header ---------- */
+  header{
+    position:sticky;top:0;z-index:50;
+    background:var(--cream);
+    border-bottom:2px solid var(--black);
+  }
+  .nav{display:flex;align-items:center;justify-content:space-between;padding:14px 28px;max-width:1180px;margin:0 auto;}
+  .brand{display:flex;align-items:center;gap:10px;}
+  .brand img{height:52px;width:52px;object-fit:contain;}
+  .brand span{font-family:'Pacifico',cursive;font-size:1.5rem;color:var(--brown-dark);}
+  .navlinks{display:flex;gap:34px;font-weight:600;font-size:.95rem;}
+  .navlinks a{position:relative;padding:4px 0;}
+  .navlinks a:hover{color:var(--brown);}
+  .btn-wpp{
+    background:var(--brown-dark);color:var(--white);
+    padding:11px 22px;border-radius:40px;font-weight:700;font-size:.9rem;
+    display:inline-flex;align-items:center;gap:8px;
+    border:2px solid var(--black);
+    transition:transform .15s ease, background .15s ease;
+    white-space:nowrap;
+  }
+  .btn-wpp:hover{background:var(--brown);transform:translateY(-2px);}
+  .navlinks-mobile-hide{display:flex;}
+  @media(max-width:820px){ .navlinks{display:none;} }
+
+  /* ---------- hero ---------- */
+  .hero{
+    position:relative;
+    background:linear-gradient(160deg,var(--beige) 0%, var(--cream) 55%);
+    padding:70px 0 130px;
+    overflow:hidden;
+  }
+  .hero .wrap{display:grid;grid-template-columns:1.1fr .9fr;gap:40px;align-items:center;}
+  .eyebrow{
+    display:inline-flex;align-items:center;gap:8px;
+    background:var(--pink);color:var(--brown-dark);
+    padding:7px 16px;border-radius:40px;font-weight:700;font-size:.8rem;
+    letter-spacing:.03em;text-transform:uppercase;border:2px solid var(--black);
+    margin-bottom:22px;
+  }
+  .hero h1{
+    font-size:clamp(2.6rem,5.4vw,4.4rem);
+    line-height:1.02;font-weight:900;color:var(--brown-dark);
+    letter-spacing:-.01em;
+  }
+  .hero h1 .script{
+    display:block;color:var(--brown);font-size:1.15em;line-height:1;margin-top:6px;
+  }
+  .hero p.lead{
+    margin-top:22px;font-size:1.08rem;line-height:1.6;color:var(--black);max-width:460px;
+  }
+  .hero-ctas{display:flex;gap:16px;margin-top:32px;flex-wrap:wrap;}
+  .btn-primary{
+    background:var(--brown-dark);color:var(--white);padding:16px 30px;border-radius:50px;
+    font-weight:700;border:2px solid var(--black);display:inline-flex;gap:10px;align-items:center;
+    transition:transform .15s ease;
+  }
+  .btn-primary:hover{transform:translateY(-3px) rotate(-1deg);}
+  .btn-secondary{
+    padding:16px 26px;border-radius:50px;font-weight:700;border:2px solid var(--black);
+    color:var(--brown-dark);
+  }
+  .hero-art{position:relative;display:flex;align-items:center;justify-content:center;}
+  .cookie-hero{width:min(380px,90%);position:relative;animation:float 5s ease-in-out infinite;}
+  @keyframes float{0%,100%{transform:translateY(0) rotate(-3deg);}50%{transform:translateY(-14px) rotate(2deg);}}
+  .crumb-fly{position:absolute;animation:fly 3.4s ease-in-out infinite;}
+  @keyframes fly{0%,100%{transform:translate(0,0) rotate(0deg);}50%{transform:translate(18px,-24px) rotate(30deg);}}
+
+  /* scalloped bite divider */
+  .bite-divider{display:block;width:100%;line-height:0;margin-top:-2px;}
+  .bite-divider svg{width:100%;height:64px;display:block;}
+
+  /* ---------- marquee strip ---------- */
+  .marquee-strip{
+    background:var(--brown-dark);color:var(--beige);
+    overflow:hidden;white-space:nowrap;border-top:2px solid var(--black);border-bottom:2px solid var(--black);
+    padding:14px 0;
+  }
+  .marquee-strip .track{display:inline-block;animation:scroll 22s linear infinite;font-weight:700;letter-spacing:.02em;}
+  .marquee-strip span{margin:0 26px;font-size:.95rem;}
+  @keyframes scroll{from{transform:translateX(0);}to{transform:translateX(-50%);}}
+
+  /* ---------- benefits ---------- */
+  .benefits{padding:80px 0 60px;}
+  .benefits-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:28px;margin-top:44px;}
+  .benefit-card{
+    background:var(--white);border:2px solid var(--black);border-radius:22px;
+    padding:30px 26px;box-shadow:6px 6px 0 var(--brown);
+    transition:transform .15s ease, box-shadow .15s ease;
+  }
+  .benefit-card:hover{transform:translate(-3px,-3px);box-shadow:9px 9px 0 var(--brown);}
+  .benefit-icon{
+    width:54px;height:54px;border-radius:50%;background:var(--pink);
+    display:flex;align-items:center;justify-content:center;font-size:1.5rem;margin-bottom:16px;
+    border:2px solid var(--black);
+  }
+  .benefit-card h3{font-size:1.15rem;margin-bottom:8px;color:var(--brown-dark);}
+  .benefit-card p{font-size:.92rem;line-height:1.55;color:#4a4238;}
+  .section-head{text-align:center;max-width:620px;margin:0 auto;}
+  .section-head .eyebrow{margin-bottom:16px;}
+  .section-head h2{font-size:clamp(2rem,4vw,2.8rem);color:var(--brown-dark);}
+  .section-head p{margin-top:14px;color:#5a4f42;font-size:1.02rem;}
+
+  @media(max-width:820px){ .benefits-grid{grid-template-columns:1fr;} .hero .wrap{grid-template-columns:1fr;} .hero-art{order:-1;} }
+
+  /* ---------- menu ---------- */
+  .menu{background:var(--beige);padding:90px 0 100px;position:relative;}
+  .menu-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:26px;margin-top:50px;}
+  .menu-card{
+    background:var(--white);border:2px solid var(--black);border-radius:20px;
+    overflow:hidden;display:flex;flex-direction:column;
+    box-shadow:6px 6px 0 var(--brown-dark);
+    transition:transform .18s ease, box-shadow .18s ease;
+  }
+  .menu-card:hover{transform:translateY(-6px);box-shadow:10px 12px 0 var(--brown-dark);}
+  .menu-card-top{
+    padding:22px 24px 10px;display:flex;align-items:flex-start;justify-content:space-between;gap:10px;
+  }
+  .menu-num{font-family:'Fraunces',serif;font-weight:900;font-size:2.6rem;color:var(--beige);
+    -webkit-text-stroke:2px var(--brown-dark);line-height:1;}
+  .menu-name{font-family:'Fraunces',serif;font-weight:700;font-size:1.3rem;color:var(--brown-dark);text-align:right;}
+  .menu-desc{padding:0 24px;font-size:.88rem;line-height:1.55;color:#544a3d;flex:1;}
+  .menu-tags{display:flex;gap:10px;flex-wrap:wrap;padding:16px 24px 0;}
+  .menu-tags span{
+    font-size:.68rem;font-weight:700;letter-spacing:.03em;text-transform:uppercase;
+    background:var(--cream);border:1.5px solid var(--brown);color:var(--brown-dark);
+    padding:5px 10px;border-radius:20px;
+  }
+  .menu-foot{
+    margin-top:18px;padding:16px 24px;border-top:2px dashed var(--beige);
+    display:flex;align-items:center;justify-content:space-between;
+  }
+  .menu-price{font-weight:800;font-size:1.15rem;color:var(--brown-dark);}
+  .menu-order{
+    background:var(--brown-dark);color:var(--white);border-radius:40px;
+    padding:9px 16px;font-size:.82rem;font-weight:700;display:inline-flex;align-items:center;gap:6px;
+    border:2px solid var(--black);
+  }
+  .menu-order:hover{background:var(--brown);}
+  @media(max-width:980px){ .menu-grid{grid-template-columns:1fr 1fr;} }
+  @media(max-width:640px){ .menu-grid{grid-template-columns:1fr;} }
+
+  /* ---------- about strip ---------- */
+  .about{padding:90px 0;}
+  .about .wrap{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center;}
+  .about-visual{
+    background:var(--pink);border:2px solid var(--black);border-radius:26px;
+    padding:44px;text-align:center;box-shadow:8px 8px 0 var(--brown);
+  }
+  .about-visual .script{font-size:2.4rem;color:var(--brown-dark);}
+  .about-visual p{margin-top:12px;font-size:.95rem;color:#5a4436;}
+  .about h2{font-size:clamp(1.8rem,3.6vw,2.5rem);color:var(--brown-dark);margin-bottom:18px;}
+  .about p{color:#4a4238;line-height:1.7;margin-bottom:14px;font-size:1rem;}
+  @media(max-width:820px){ .about .wrap{grid-template-columns:1fr;} }
+
+  /* ---------- CTA whatsapp band ---------- */
+  .cta-band{
+    background:var(--brown-dark);color:var(--cream);text-align:center;padding:70px 24px;
+    border-top:2px solid var(--black);border-bottom:2px solid var(--black);position:relative;overflow:hidden;
+  }
+  .cta-band h2{font-size:clamp(1.8rem,4vw,2.6rem);margin-bottom:14px;}
+  .cta-band .script{color:var(--pink);}
+  .cta-band p{opacity:.85;max-width:480px;margin:0 auto 30px;font-size:1rem;}
+  .cta-band .btn-primary{background:var(--pink);color:var(--brown-dark);border-color:var(--pink);}
+  .cta-band .btn-primary:hover{background:var(--white);}
+
+  /* ---------- footer ---------- */
+  footer{background:var(--pink);padding:60px 0 30px;}
+  .footer-grid{display:grid;grid-template-columns:1.3fr 1fr 1fr;gap:40px;}
+  .footer-brand{display:flex;align-items:center;gap:12px;margin-bottom:14px;}
+  .footer-brand img{height:48px;width:48px;}
+  .footer-brand span{font-family:'Pacifico',cursive;font-size:1.4rem;color:var(--brown-dark);}
+  footer p{color:#6b5644;font-size:.92rem;line-height:1.6;}
+  footer h4{font-size:.85rem;text-transform:uppercase;letter-spacing:.05em;color:var(--brown-dark);margin-bottom:14px;}
+  footer ul{list-style:none;}
+  footer li{margin-bottom:10px;font-size:.92rem;color:#6b5644;}
+  footer li a:hover{color:var(--brown-dark);text-decoration:underline;}
+  .footer-bottom{
+    margin-top:44px;padding-top:22px;border-top:2px solid rgba(30,30,30,.15);
+    display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;font-size:.82rem;color:#7a6553;
+  }
+  @media(max-width:820px){ .footer-grid{grid-template-columns:1fr;gap:26px;} }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="nav">
+    <a class="brand" href="#top">
+      <img src="assets/logo.png" alt="Biscotteca">
+      <span>Biscotteca</span>
+    </a>
+    <nav class="navlinks">
+      <a href="#cardapio">Cardápio</a>
+      <a href="#sobre">Sobre</a>
+      <a href="#pedir">Como pedir</a>
+    </nav>
+    <a class="btn-wpp" href="https://api.whatsapp.com/send/?phone=5554994170585&text=Oi!%20Quero%20fazer%20um%20pedido%20na%20Biscotteca%20%F0%9F%8D%AA&type=phone_number&app_absent=0" target="_blank" rel="noopener">
+      🥛 Pedir no WhatsApp
+    </a>
+  </div>
+</header>
+
+<section class="hero" id="top">
+  <div class="wrap">
+    <div>
+      <span class="eyebrow">🍪 Cookies artesanais</span>
+      <h1>O cookie que some<span class="script">rapidinho da bandeja</span></h1>
+      <p class="lead">Massa macia por dentro, crocante por fora, recheios generosos e feitos à mão, um de cada vez. Estilo Nova York, carinho daqui.</p>
+      <div class="hero-ctas">
+        <a class="btn-primary" href="https://api.whatsapp.com/send/?phone=5554994170585&text=Oi!%20Quero%20ver%20o%20card%C3%A1pio%20da%20Biscotteca%20%F0%9F%8D%AA&type=phone_number&app_absent=0" target="_blank" rel="noopener">🍪 Pedir agora</a>
+        <a class="btn-secondary" href="#cardapio">Ver cardápio</a>
+      </div>
+    </div>
+    <div class="hero-art">
+      <svg class="cookie-hero" viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="200" cy="205" r="150" fill="#C9955C" stroke="#1E1E1E" stroke-width="6"/>
+        <path d="M320 120 C340 95, 355 60, 335 35 C320 55, 305 75, 300 100 Z" fill="#FBF3E7" stroke="#1E1E1E" stroke-width="4"/>
+        <circle cx="150" cy="140" r="14" fill="#4A3526"/>
+        <circle cx="230" cy="120" r="11" fill="#4A3526"/>
+        <circle cx="270" cy="190" r="15" fill="#4A3526"/>
+        <circle cx="140" cy="220" r="10" fill="#4A3526"/>
+        <circle cx="190" cy="260" r="13" fill="#4A3526"/>
+        <circle cx="260" cy="280" r="9" fill="#4A3526"/>
+        <circle cx="100" cy="180" r="9" fill="#4A3526"/>
+        <circle cx="220" cy="200" r="8" fill="#4A3526"/>
+      </svg>
+      <svg class="crumb-fly" style="top:8%;right:6%;width:26px" viewBox="0 0 20 20"><circle cx="10" cy="10" r="9" fill="#4A3526"/></svg>
+      <svg class="crumb-fly" style="top:60%;right:0%;width:16px;animation-delay:.6s" viewBox="0 0 20 20"><circle cx="10" cy="10" r="9" fill="#8B6A3E"/></svg>
+      <svg class="crumb-fly" style="top:30%;right:14%;width:12px;animation-delay:1.2s" viewBox="0 0 20 20"><circle cx="10" cy="10" r="9" fill="#4A3526"/></svg>
+    </div>
+  </div>
+  <div class="bite-divider">
+    <svg viewBox="0 0 1200 60" preserveAspectRatio="none"><path d="M0,60 L0,20 Q25,0 50,20 T100,20 T150,20 T200,20 T250,20 T300,20 T350,20 T400,20 T450,20 T500,20 T550,20 T600,20 T650,20 T700,20 T750,20 T800,20 T850,20 T900,20 T950,20 T1000,20 T1050,20 T1100,20 T1150,20 T1200,20 L1200,60 Z" fill="#4A3526"/></svg>
+  </div>
+</section>
+
+<div class="marquee-strip">
+  <div class="track">
+    <span>🍪 Feito à mão, todo dia</span><span>🥛 Pedidos direto pelo WhatsApp</span><span>🍪 Recheios generosos</span><span>🥛 Estilo Nova York</span>
+    <span>🍪 Feito à mão, todo dia</span><span>🥛 Pedidos direto pelo WhatsApp</span><span>🍪 Recheios generosos</span><span>🥛 Estilo Nova York</span>
+  </div>
+</div>
+
+<section class="benefits" id="pedir">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="eyebrow">Como funciona</span>
+      <h2>Sem complicação, só cookie</h2>
+      <p>Nada de carrinho ou cadastro. Você escolhe, chama no zap e a gente combina tudo por lá.</p>
+    </div>
+    <div class="benefits-grid">
+      <div class="benefit-card">
+        <div class="benefit-icon">🌾</div>
+        <h3>Ingredientes selecionados</h3>
+        <p>Escolhemos cada chocolate e recheio a dedo, sem economizar no que importa.</p>
+      </div>
+      <div class="benefit-card">
+        <div class="benefit-icon">🥄</div>
+        <h3>Produzido artesanalmente</h3>
+        <p>Cada fornada é feita à mão, em lotes pequenos, do jeito que cookie bom merece.</p>
+      </div>
+      <div class="benefit-card">
+        <div class="benefit-icon">💬</div>
+        <h3>Pedido pelo WhatsApp</h3>
+        <p>Manda mensagem, escolhe os sabores e combina retirada ou entrega direto com a gente.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="menu" id="cardapio">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="eyebrow">🍪 Cardápio</span>
+      <h2>Sai quentinho do forno</h2>
+      <p>Seis sabores fixos, todos feitos artesanalmente. Escolha o seu e chama no WhatsApp.</p>
+    </div>
+
+    <div class="menu-grid">
+
+      <div class="menu-card">
+        <div class="menu-card-top"><span class="menu-num">01</span><span class="menu-name">Avelã</span></div>
+        <p class="menu-desc">Massa tradicional de baunilha, chips de chocolate meio amargo e recheio de avelã.</p>
+        <div class="menu-tags"><span>Ingredientes selecionados</span><span>Artesanal</span></div>
+        <div class="menu-foot">
+          <span class="menu-price">R$ 13,00</span>
+          <a class="menu-order" href="https://api.whatsapp.com/send/?phone=5554994170585&text=Oi!%20Quero%20pedir%20o%20cookie%20Avel%C3%A3%20%F0%9F%8D%AA&type=phone_number&app_absent=0" target="_blank" rel="noopener">Pedir →</a>
+        </div>
+      </div>
+
+      <div class="menu-card">
+        <div class="menu-card-top"><span class="menu-num">02</span><span class="menu-name">Red Velvet</span></div>
+        <p class="menu-desc">Massa red velvet, chips de chocolate branco e recheio de brigadeiro de ninho.</p>
+        <div class="menu-tags"><span>Ingredientes selecionados</span><span>Artesanal</span></div>
+        <div class="menu-foot">
+          <span class="menu-price">R$ 13,00</span>
+          <a class="menu-order" href="https://api.whatsapp.com/send/?phone=5554994170585&text=Oi!%20Quero%20pedir%20o%20cookie%20Red%20Velvet%20%F0%9F%8D%AA&type=phone_number&app_absent=0" target="_blank" rel="noopener">Pedir →</a>
+        </div>
+      </div>
+
+      <div class="menu-card">
+        <div class="menu-card-top"><span class="menu-num">03</span><span class="menu-name">Chocolatudo</span></div>
+        <p class="menu-desc">Massa de cacau, chips de chocolate meio amargo e recheio de brigadeiro.</p>
+        <div class="menu-tags"><span>Ingredientes selecionados</span><span>Artesanal</span></div>
+        <div class="menu-foot">
+          <span class="menu-price">R$ 13,00</span>
+          <a class="menu-order" href="https://api.whatsapp.com/send/?phone=5554994170585&text=Oi!%20Quero%20pedir%20o%20cookie%20Chocolatudo%20%F0%9F%8D%AA&type=phone_number&app_absent=0" target="_blank" rel="noopener">Pedir →</a>
+        </div>
+      </div>
+
+      <div class="menu-card">
+        <div class="menu-card-top"><span class="menu-num">04</span><span class="menu-name">Nozes</span></div>
+        <p class="menu-desc">Massa tradicional com nozes, chips de chocolate meio amargo e recheio de brigadeiro.</p>
+        <div class="menu-tags"><span>Ingredientes selecionados</span><span>Artesanal</span></div>
+        <div class="menu-foot">
+          <span class="menu-price">R$ 15,00</span>
+          <a class="menu-order" href="https://api.whatsapp.com/send/?phone=5554994170585&text=Oi!%20Quero%20pedir%20o%20cookie%20Nozes%20%F0%9F%8D%AA&type=phone_number&app_absent=0" target="_blank" rel="noopener">Pedir →</a>
+        </div>
+      </div>
+
+      <div class="menu-card">
+        <div class="menu-card-top"><span class="menu-num">05</span><span class="menu-name">Casadinho</span></div>
+        <p class="menu-desc">Massa meio a meio, tradicional e de cacau, chips de chocolate meio amargo e branco, recheio de ninho e avelã.</p>
+        <div class="menu-tags"><span>Ingredientes selecionados</span><span>Artesanal</span></div>
+        <div class="menu-foot">
+          <span class="menu-price">R$ 14,00</span>
+          <a class="menu-order" href="https://api.whatsapp.com/send/?phone=5554994170585&text=Oi!%20Quero%20pedir%20o%20cookie%20Casadinho%20%F0%9F%8D%AA&type=phone_number&app_absent=0" target="_blank" rel="noopener">Pedir →</a>
+        </div>
+      </div>
+
+      <div class="menu-card">
+        <div class="menu-card-top"><span class="menu-num">06</span><span class="menu-name">Kinder Bueno</span></div>
+        <p class="menu-desc">Massa tradicional, chips de chocolate meio amargo e branco, recheio de Kinder Bueno.</p>
+        <div class="menu-tags"><span>Ingredientes selecionados</span><span>Artesanal</span></div>
+        <div class="menu-foot">
+          <span class="menu-price">R$ 17,00</span>
+          <a class="menu-order" href="https://api.whatsapp.com/send/?phone=5554994170585&text=Oi!%20Quero%20pedir%20o%20cookie%20Kinder%20Bueno%20%F0%9F%8D%AA&type=phone_number&app_absent=0" target="_blank" rel="noopener">Pedir →</a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<section class="about" id="sobre">
+  <div class="wrap">
+    <div class="about-visual">
+      <span class="script">Feito à mão,<br>fornada a fornada</span>
+      <p>Sem linha de produção. Cada cookie passa pela mão de quem faz, do jeito que comfort food de verdade merece.</p>
+    </div>
+    <div>
+      <span class="eyebrow">🥛 Sobre a Biscotteca</span>
+      <h2>Cookie de padaria de bairro, com carinho de confeitaria</h2>
+      <p>A Biscotteca nasceu da vontade de trazer aquele cookie grosso, macio por dentro e crocante por fora, estilo Nova York, pro dia a dia de quem gosta de um doce bem feito.</p>
+      <p>Cada sabor é pensado com ingredientes selecionados e recheios generosos, produzidos artesanalmente em lotes pequenos, pra garantir que cada mordida valha a pena.</p>
+    </div>
+  </div>
+</section>
+
+<section class="cta-band">
+  <span class="eyebrow" style="background:var(--pink);color:var(--brown-dark);">🍪🥛</span>
+  <h2>Bateu a vontade? <span class="script">Chama no zap</span></h2>
+  <p>Todos os pedidos são feitos pelo WhatsApp. Escolhe os sabores, manda mensagem e a gente combina tudo com você.</p>
+  <a class="btn-primary" href="https://api.whatsapp.com/send/?phone=5554994170585&text=Oi!%20Quero%20fazer%20um%20pedido%20na%20Biscotteca%20%F0%9F%8D%AA&type=phone_number&app_absent=0" target="_blank" rel="noopener">🥛 Pedir no WhatsApp</a>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="footer-grid">
+      <div>
+        <div class="footer-brand">
+          <img src="assets/logo.png" alt="Biscotteca">
+          <span>Biscotteca</span>
+        </div>
+        <p>Cookies artesanais estilo Nova York, feitos à mão em lotes pequenos. 🍪🥛</p>
+      </div>
+      <div>
+        <h4>Navegação</h4>
+        <ul>
+          <li><a href="#cardapio">Cardápio</a></li>
+          <li><a href="#sobre">Sobre</a></li>
+          <li><a href="#pedir">Como pedir</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Contato</h4>
+        <ul>
+          <li><a href="https://api.whatsapp.com/send/?phone=5554994170585&text=Oi!%20Quero%20fazer%20um%20pedido%20na%20Biscotteca%20%F0%9F%8D%AA&type=phone_number&app_absent=0" target="_blank" rel="noopener">WhatsApp</a></li>
+          <li>Pedidos feitos só pelo WhatsApp</li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 Biscotteca. Todos os cookies reservados.</span>
+      <span>Feito com 🍪 e carinho.</span>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
