@@ -1,6 +1,6 @@
 <title>Trilha de Cursos Dev</title>
 <meta name="claude:viewport-fit-sides" content="cover">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=DM+Sans:wght@400;500;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap">
 <style>
 /* Duas telas na mesma página: a vitrine de cursos e a grade de aulas de Python. */
 :root {
@@ -13,8 +13,8 @@
   --accent-ink: #15102a;
   --hot: #ff7a8a;
   --line: #3a3064;
-  --font-display: "Fraunces", Georgia, "Times New Roman", serif;
-  --font-body: "DM Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-display: "Nunito", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-body: "Nunito", system-ui, -apple-system, "Segoe UI", sans-serif;
 }
 @media (prefers-color-scheme: light) {
   :root:not([data-theme="dark"]) {
@@ -472,6 +472,12 @@ a { color: inherit; }
   font-size: .95rem;
 }
 .detail a.ext:hover { color: var(--accent); border-color: var(--accent); text-decoration: none; }
+
+/* tipografia: Nunito arredondada, em negrito nos títulos */
+h1, h2, h3, h4 { font-weight: 900; letter-spacing: -.01em; }
+em { font-style: normal; font-weight: 900; }
+b, strong { font-weight: 800; }
+body { font-weight: 600; }
 
 /* perfil: painel de status */
 .sys { margin-top: 1.5rem; display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 1rem; }
@@ -1106,13 +1112,14 @@ footer {
   }
 
   function agrupar() {
-    var n = 0;
+    var g = 0;
     MUNDOS.forEach(function (m, mi) {
-      var cur = [], soma = 0;
+      var cur = [], soma = 0, n = 0;
       function fecha() {
         if (!cur.length) return;
         n += 1;
-        aulas.push({ key: "m" + (mi + 1) + "-" + cur[0][0], n: n, mundo: mi, videos: cur, total: soma, aprende: APRENDE[n - 1] || "" });
+        g += 1;
+        aulas.push({ key: "m" + (mi + 1) + "-" + cur[0][0], n: n, mundo: mi, videos: cur, total: soma, aprende: APRENDE[g - 1] || "" });
         cur = []; soma = 0;
       }
       m.videos.forEach(function (v) {
