@@ -719,10 +719,10 @@ footer {
       <article class="card" data-cat="ferramentas" data-title="git github versionamento guanabara">
         <div class="card-art"><span class="art-tag">Git</span></div>
         <div class="card-body">
-          <div class="meta"><span class="pill">Ferramentas</span><span>20 horas</span></div>
+          <div class="meta"><span class="pill">Ferramentas</span><span>13 vídeos · 8 h</span></div>
           <h3>Git e GitHub</h3>
           <p>Versionamento e colaboração. Todo projeto do portfólio passa por aqui.</p>
-          <div class="card-foot"><span>Curso em Vídeo</span><a href="https://www.cursoemvideo.com/curso/curso-de-git-e-github/" target="_blank" rel="noopener noreferrer">Abrir curso ↗</a></div>
+          <div class="card-foot"><span>Curso em Vídeo</span><button type="button" data-go="git">Abrir aulas →</button></div>
         </div>
       </article>
 
@@ -789,6 +789,27 @@ footer {
 
     <footer>
       <span>Os vídeos são do canal de Corey Schafer. Tocam aqui na página.</span>
+    </footer>
+  </div>
+
+  <!-- TELA 2c: aulas de Git e GitHub -->
+  <div id="git" hidden>
+    <button class="back" type="button" data-go="home">← Voltar aos cursos</button>
+
+    <header class="py-head">
+      <div>
+        <h1>Git e GitHub <em>em aulas</em></h1>
+        <p>Os 13 vídeos da playlist do Curso em Vídeo, agrupados em sessões de cerca de 1 hora. Toque em uma aula para ver os vídeos e o que você vai aprender.</p>
+      </div>
+      <span class="py-count" id="gitCount">0 de 10 aulas</span>
+    </header>
+
+    <div id="gitMundos"></div>
+
+    <section class="detail" id="gitDetail" hidden aria-live="polite"></section>
+
+    <footer>
+      <span>Os vídeos são do canal Curso em Vídeo. Tocam aqui na página.</span>
     </footer>
   </div>
 
@@ -874,6 +895,9 @@ footer {
     ]},
     { nome: "FastAPI · Corey Schafer", videos: [
       ["7AMjmCTumuo","Python FastAPI Tutorial (Part 1): Getting Started - Web App + REST API",1434],["G4NIB9Rx9Qs","Python FastAPI Tutorial (Part 2): HTML Frontend for Your API - Jinja2 Templates",2246],["WRjXIA5pMtk","Python FastAPI Tutorial (Part 3): Path Parameters - Validation and Error Handling",2216],["9GHxnttXxrA","Python FastAPI Tutorial (Part 4): Pydantic Schemas - Request and Response Validation",1463],["NvOV3ig2tGY","Python FastAPI Tutorial (Part 5): Adding a Database - SQLAlchemy Models and Relationships",3780],["VyoGAoxQhxM","Python FastAPI Tutorial (Part 6): Completing CRUD - Update and Delete (PUT, PATCH, DELETE)",2182],["2JPDt-Jp6fM","Python FastAPI Tutorial (Part 7): Sync vs Async - Converting Your App to Asynchronous",1930],["NkgIHa6KtHg","Python FastAPI Tutorial (Part 8): Routers - Organizing Routes into Modules with APIRouter",1213],["vqjZOyT4QRs","Python FastAPI Tutorial (Part 9): Frontend Forms - Connecting JavaScript to Your API",1744],["Go4wYJJhR3k","Python FastAPI Tutorial (Part 10): Authentication - Registration and Login with JWT",3450],["MY0TFMMm9B0","Python FastAPI Tutorial (Part 11): Authorization - Protecting Routes and Verifying Current User",2304],["AExumWjfbyo","Python FastAPI Tutorial (Part 12): File Uploads - Image Processing, Validation, and Storage",2071],["f1zggIOxmJg","Python FastAPI Tutorial (Part 13): Pagination - Loading More Data with Query Parameters",2192],["4HxjBvZMAg8","Python FastAPI Tutorial (Part 14): Password Reset - Email, Tokens, and Background Tasks",3535],["e8NnDz8uT7o","Python FastAPI Tutorial (Part 15): PostgreSQL and Alembic - Database Migrations for Production",2874],["zCTJ3AdDym4","Python FastAPI Tutorial (Part 16): AWS S3 and Boto3 - Moving File Uploads to the Cloud",2858],["SO7m7nod0ts","Python FastAPI Tutorial (Part 17): Testing the API - Pytest, Fixtures, and Mocking External Services",4946],["wd1wt2d0eus","Python FastAPI Tutorial (Part 18): Deploy to a VPS - Security, Nginx, SSL, and Custom Domain",5525],["eqjngvKfabg","Python FastAPI Tutorial (Part 19): Deploy with Docker - Serverless Containers and Custom Domain",4754]
+    ]},
+    { nome: "Git e GitHub · Curso em Vídeo", videos: [
+      ["xEKo29OWILE","O que é Git? O que é versionamento? - Curso de Git e GitHub",1826],["hcZ0qtwvN1w","O que é GitHub? Pra que ele serve? - Curso de Git e GitHub",2260],["CJtrNuTTs4Q","A Evolução do Git e GitHub - Curso de Git e GitHub",2607],["gMh6lrXibWY","Instalações e configurações importantes - Curso de Git e GitHub",2017],["5BYm7UdCrX0","Criando o primeiro Repositório - Curso de Git e GitHub",2062],["CSyEYiG8sFI","Instalando GitHub Desktop no Linux - Curso de Git e GitHub",2618],["OlArEishhQg","Clonando um Repositório - Curso de Git e GitHub",1655],["065NQCDSMb0","Versionando seus projetos antigos - Curso de Git e GitHub",1636],["mUZOySyVcuQ","Você sabe usar Issues? - Curso de Git e GitHub",2448],["LntSB-gl-ZI","Guia da Linguagem Markdown - Curso de Git e GitHub",3092],["bsI6P_IM_hg","Seu GitHub muito mais seguro - Curso de Git e GitHub",1945],["xAOBQtSVI_k","Git Branches de forma fácil e com exemplo - Curso de Git e GitHub",2977],["2Y0HXnYpn9E","Hospedagem Grátis no GitHub Pages - Curso de Git e GitHub",2155]
     ]}
   ];
 
@@ -928,7 +952,17 @@ footer {
     "Mover os uploads para a nuvem com AWS S3 e Boto3.",
     "Testar a API com Pytest, fixtures e mocks de serviços externos.",
     "Colocar a API num servidor VPS com segurança, Nginx, SSL e domínio próprio.",
-    "Empacotar a aplicação com Docker e publicar com domínio próprio."
+    "Empacotar a aplicação com Docker e publicar com domínio próprio.",
+    "Entender o que é versionamento e o papel do Git e do GitHub.",
+    "Conhecer a evolução do Git e do GitHub e como eles chegaram ao que são hoje.",
+    "Instalar e configurar o Git, e criar o primeiro repositório.",
+    "Instalar o GitHub Desktop no Linux e usar o app para trabalhar com repositórios.",
+    "Clonar repositórios e versionar projetos que já existem.",
+    "Usar Issues para organizar problemas e tarefas do projeto.",
+    "Escrever documentação em Markdown, como o README dos projetos.",
+    "Deixar a conta do GitHub mais segura.",
+    "Trabalhar com branches, criando linhas paralelas de trabalho e unindo-as depois.",
+    "Publicar um site de graça com GitHub Pages."
   ];
 
   var TETO = 4200; /* 70 min */
@@ -1013,8 +1047,14 @@ footer {
     }
     var pyTot = aulas.filter(function (a) { return a.mundo < 3; }).length || 1;
     var faTot = aulas.filter(function (a) { return a.mundo === 3; }).length || 1;
-    var pyDone = 0, faDone = 0;
-    aulas.forEach(function (a) { if (done[a.key]) { if (a.mundo === 3) faDone += 1; else pyDone += 1; } });
+    var gitTot = aulas.filter(function (a) { return a.mundo === 4; }).length || 1;
+    var pyDone = 0, faDone = 0, gitDone = 0;
+    aulas.forEach(function (a) {
+      if (!done[a.key]) return;
+      if (a.mundo === 3) faDone += 1;
+      else if (a.mundo === 4) gitDone += 1;
+      else pyDone += 1;
+    });
 
     var missoesFeitas = 0;
     Object.keys(habits).forEach(function (d) { missoesFeitas += contaDia(d); });
@@ -1022,7 +1062,7 @@ footer {
     for (i = 0; i < 7; i++) { if (contaDia(diaKey(i)) > 0) dias7 += 1; }
     for (j = 0; j < 30; j++) { if ((habits[diaKey(j)] || {}).audio) audio30 += 1; }
 
-    var xp = (pyDone + faDone) * 100 + missoesFeitas * 20;
+    var xp = (pyDone + faDone + gitDone) * 100 + missoesFeitas * 20;
     var nivel = Math.floor(xp / 400) + 1;
     $("nivel").textContent = String(nivel);
     $("titulo").textContent = TITULOS[Math.min(nivel - 1, TITULOS.length - 1)];
@@ -1033,6 +1073,7 @@ footer {
     var stats = [
       ["Python", pyDone / pyTot * 100, pyDone + " de " + pyTot + " aulas"],
       ["FastAPI", faDone / faTot * 100, faDone + " de " + faTot + " aulas"],
+      ["Git", gitDone / gitTot * 100, gitDone + " de " + gitTot + " aulas"],
       ["Disciplina", dias7 / 7 * 100, dias7 + " de 7 dias"],
       ["Comunicação", Math.min(100, audio30 / 15 * 100), audio30 + " áudios"]
     ];
@@ -1084,7 +1125,7 @@ footer {
 
     var sk = $("skills");
     sk.innerHTML = "";
-    [["Python", pyDone, pyTot], ["FastAPI", faDone, faTot]].forEach(function (s) {
+    [["Python", pyDone, pyTot], ["FastAPI", faDone, faTot], ["Git", gitDone, gitTot]].forEach(function (s) {
       var rowS = el("div", "skill-row");
       rowS.appendChild(el("span", null, s[0]));
       rowS.appendChild(el("small", null, s[1] + " de " + s[2] + " aulas"));
@@ -1134,7 +1175,7 @@ footer {
   function buildPython() {
     agrupar();
     MUNDOS.forEach(function (m, mi) {
-      var wrap = $(mi === 3 ? "faMundos" : "pyMundos");
+      var wrap = $(["pyMundos", "pyMundos", "pyMundos", "faMundos", "gitMundos"][mi]);
       wrap.appendChild(el("h2", "mundo-title", m.nome));
       var n = aulas.filter(function (a) { return a.mundo === mi; }).length;
       var horas = aulas.filter(function (a) { return a.mundo === mi; }).reduce(function (s, a) { return s + a.total; }, 0);
@@ -1151,7 +1192,7 @@ footer {
         top.appendChild(el("span", "sq-tag", a.videos.length + (a.videos.length > 1 ? " vídeos" : " vídeo")));
         b.appendChild(top);
         b.appendChild(el("span", "sq-check", "✓"));
-        b.appendChild(el("h3", "sq-title", a.videos[0][1].replace(/^Python FastAPI Tutorial /, "").replace(/^\(Part (\d+)\):\s*/, "Parte $1 · ").replace(/^(Curso|Exercício) Python #?/, "").replace(/^(\d+)\s*-\s*/, "$1 · ").slice(0, 60)));
+        b.appendChild(el("h3", "sq-title", a.videos[0][1].replace(/ - Curso de Git e GitHub$/, "").replace(/^Python FastAPI Tutorial /, "").replace(/^\(Part (\d+)\):\s*/, "Parte $1 · ").replace(/^(Curso|Exercício) Python #?/, "").replace(/^(\d+)\s*-\s*/, "$1 · ").slice(0, 60)));
         b.appendChild(el("p", "sq-desc", a.aprende));
         b.appendChild(el("span", "sq-time", "~ " + fmt(a.total)));
         grid.appendChild(b);
@@ -1193,7 +1234,7 @@ footer {
     if (!a) return;
     selected = k;
     aulas.forEach(function (x) { if (x.el) x.el.setAttribute("aria-pressed", x.key === k ? "true" : "false"); });
-    var d = $(a.mundo === 3 ? "faDetail" : "detail");
+    var d = $(["detail", "detail", "detail", "faDetail", "gitDetail"][a.mundo]);
     d.innerHTML = "";
     d.hidden = false;
     d.appendChild(el("p", "aula-n", "AULA " + a.n + " · " + MUNDOS[a.mundo].nome));
@@ -1249,12 +1290,16 @@ footer {
         a.el.querySelector(".sq-check").textContent = on ? "✓" : "";
       }
     });
-    var pyTot = aulas.filter(function (a) { return a.mundo < 3; }).length;
-    var faTot = aulas.length - pyTot;
-    var pyFe = aulas.filter(function (a) { return a.mundo < 3 && done[a.key]; }).length;
-    var faFe = aulas.filter(function (a) { return a.mundo === 3 && done[a.key]; }).length;
-    $("pyCount").textContent = pyFe + " de " + pyTot + " aulas";
-    $("faCount").textContent = faFe + " de " + faTot + " aulas";
+    var grupos = { pyCount: [0, 0], faCount: [0, 0], gitCount: [0, 0] };
+    var idCurso = ["pyCount", "pyCount", "pyCount", "faCount", "gitCount"];
+    aulas.forEach(function (a) {
+      var g = grupos[idCurso[a.mundo]];
+      g[1] += 1;
+      if (done[a.key]) g[0] += 1;
+    });
+    Object.keys(grupos).forEach(function (k) {
+      $(k).textContent = grupos[k][0] + " de " + grupos[k][1] + " aulas";
+    });
     $("homeBar").style.width = (aulas.length ? feitas / aulas.length * 100 : 0) + "%";
     var b = $("toggleDone");
     if (b) {
@@ -1320,7 +1365,7 @@ footer {
 
   /* troca de tela sem sair da página */
   function show(view) {
-    ["home", "python", "fastapi", "perfil"].forEach(function (v) { $(v).hidden = v !== view; });
+    ["home", "python", "fastapi", "git", "perfil"].forEach(function (v) { $(v).hidden = v !== view; });
     $("homeFoot").hidden = view !== "home";
     if (view === "home") { window.scrollTo(0, 0); }
     else { $(view).scrollIntoView({ block: "start" }); }
@@ -1417,6 +1462,6 @@ footer {
   paint();
   connect();
   var h = location.hash.slice(1);
-  if (h === "python" || h === "fastapi" || h === "perfil") show(h);
+  if (h === "python" || h === "fastapi" || h === "git" || h === "perfil") show(h);
 })();
 </script>
