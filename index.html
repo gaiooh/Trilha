@@ -473,39 +473,6 @@ a { color: inherit; }
 }
 .detail a.ext:hover { color: var(--accent); border-color: var(--accent); text-decoration: none; }
 
-/* assistente das aulas */
-.chat-fab {
-  position: fixed; right: 1rem; bottom: 1rem; z-index: 40;
-  font: 800 .92rem var(--font-body);
-  color: var(--accent-ink); background: var(--accent);
-  border: 0; border-radius: 999px;
-  padding: .75rem 1.1rem;
-  box-shadow: 0 0 24px rgba(166,140,255,.5);
-  cursor: pointer;
-}
-.chat-panel {
-  position: fixed; right: 1rem; bottom: 4.5rem; z-index: 40;
-  width: min(380px, calc(100vw - 2rem));
-  height: min(520px, 70vh);
-  display: flex; flex-direction: column;
-  background: var(--panel); color: var(--ink);
-  border: 1px solid var(--line); border-radius: 18px;
-  box-shadow: 0 0 36px rgba(166,140,255,.25);
-  overflow: hidden;
-}
-.chat-panel[hidden] { display: none; }
-.chat-head { display: flex; justify-content: space-between; align-items: center; padding: .8rem 1rem; border-bottom: 1px solid var(--line); }
-.chat-head button { background: none; border: 0; color: var(--muted); font-size: 1.4rem; line-height: 1; cursor: pointer; }
-.chat-tools { display: flex; flex-wrap: wrap; align-items: center; gap: .5rem; padding: .6rem 1rem; font-size: .8rem; color: var(--muted); border-bottom: 1px solid var(--line); }
-.chat-tools button { font: 800 .8rem var(--font-body); color: var(--accent); background: var(--panel-2); border: 1px solid var(--line); border-radius: 999px; padding: .35rem .7rem; cursor: pointer; }
-.chat-log { flex: 1; overflow-y: auto; padding: .8rem; display: flex; flex-direction: column; gap: .5rem; }
-.chat-msg { max-width: 88%; padding: .55rem .75rem; border-radius: 14px; font-size: .92rem; line-height: 1.45; white-space: pre-wrap; }
-.chat-msg.user { align-self: flex-end; background: var(--accent); color: var(--accent-ink); border-bottom-right-radius: 4px; }
-.chat-msg.bot { align-self: flex-start; background: var(--panel-2); border-bottom-left-radius: 4px; }
-.chat-form { display: flex; gap: .4rem; padding: .6rem; border-top: 1px solid var(--line); }
-.chat-form input { flex: 1; min-width: 0; font: inherit; font-size: .92rem; color: var(--ink); background: var(--panel-2); border: 1px solid var(--line); border-radius: 12px; padding: .5rem .7rem; }
-.chat-form button { font: 800 .85rem var(--font-body); background: var(--accent); color: var(--accent-ink); border: 0; border-radius: 12px; padding: .5rem .85rem; cursor: pointer; }
-
 /* tipografia: Nunito arredondada, em negrito nos títulos */
 h1, h2, h3, h4 { font-weight: 900; letter-spacing: -.01em; }
 em { font-style: normal; font-weight: 900; }
@@ -1225,7 +1192,6 @@ footer {
     var a = aulaByKey(k);
     if (!a) return;
     selected = k;
-    document.body.dataset.videos = JSON.stringify(a.videos.map(function (v) { return v[0]; }));
     aulas.forEach(function (x) { if (x.el) x.el.setAttribute("aria-pressed", x.key === k ? "true" : "false"); });
     var d = $(a.mundo === 3 ? "faDetail" : "detail");
     d.innerHTML = "";
@@ -1452,77 +1418,5 @@ footer {
   connect();
   var h = location.hash.slice(1);
   if (h === "python" || h === "fastapi" || h === "perfil") show(h);
-})();
-</script>
-
-<button class="chat-fab" id="chatFab" type="button" aria-controls="chatPanel" aria-expanded="false">✦ Pergunte às aulas</button>
-<section class="chat-panel" id="chatPanel" hidden aria-label="Assistente das aulas">
-  <header class="chat-head"><b>Assistente das aulas</b><button type="button" id="chatClose" aria-label="Fechar">×</button></header>
-  <div class="chat-tools">
-    <button type="button" id="chatResumo">Resumir esta aula</button>
-    <span id="chatAula">Sem aula aberta: busco em todas as aulas.</span>
-  </div>
-  <div class="chat-log" id="chatLog" aria-live="polite"></div>
-  <form class="chat-form" id="chatForm">
-    <input id="chatInput" placeholder="Pergunte sobre as aulas..." maxlength="500" autocomplete="off" aria-label="Sua pergunta">
-    <button type="submit">Enviar</button>
-  </form>
-</section>
-
-<script>
-(function () {
-  var CHAT_URL = "COLE_AQUI_A_URL_DO_WORKER";
-  var fab = document.getElementById("chatFab"), panel = document.getElementById("chatPanel");
-  var log = document.getElementById("chatLog"), form = document.getElementById("chatForm");
-  var input = document.getElementById("chatInput"), resumo = document.getElementById("chatResumo");
-  var aulaTxt = document.getElementById("chatAula");
-
-  function videos() {
-    try {
-      var v = JSON.parse(document.body.dataset.videos || "null");
-      return Array.isArray(v) && v.length ? v : null;
-    } catch (e) { return null; }
-  }
-  function msg(role, text) {
-    var d = document.createElement("div");
-    d.className = "chat-msg " + role;
-    d.textContent = text;
-    log.appendChild(d);
-    log.scrollTop = log.scrollHeight;
-    return d;
-  }
-  function togglePanel(open) {
-    panel.hidden = !open;
-    fab.setAttribute("aria-expanded", open ? "true" : "false");
-    if (open) {
-      aulaTxt.textContent = videos() ? "Usando a aula aberta." : "Sem aula aberta: busco em todas as aulas.";
-      input.focus();
-    }
-  }
-  function ask(q, exigeAula) {
-    if (!q) return;
-    if (exigeAula && !videos()) { msg("bot", "Abra uma aula primeiro para eu resumir."); return; }
-    if (CHAT_URL.indexOf("COLE_AQUI") === 0) { msg("bot", "A IA ainda não está configurada. Falta colocar a URL do servidor no código do site."); return; }
-    msg("user", q);
-    var espera = msg("bot", "Pensando...");
-    fetch(CHAT_URL, {
-      method: "POST",
-      headers: { "content-type": "application/json" },
-      body: JSON.stringify({ pergunta: q, videos: videos() })
-    })
-      .then(function (r) { return r.json(); })
-      .then(function (j) { espera.textContent = j.resposta || j.erro || "Não consegui responder agora."; })
-      .catch(function () { espera.textContent = "Não consegui falar com o servidor. Tente de novo."; });
-  }
-
-  fab.addEventListener("click", function () { togglePanel(panel.hidden); });
-  document.getElementById("chatClose").addEventListener("click", function () { togglePanel(false); });
-  form.addEventListener("submit", function (ev) {
-    ev.preventDefault();
-    var q = input.value.trim();
-    input.value = "";
-    ask(q, false);
-  });
-  resumo.addEventListener("click", function () { ask("Faça um resumo desta aula, em tópicos curtos.", true); });
 })();
 </script>
