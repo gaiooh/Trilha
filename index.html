@@ -530,6 +530,13 @@ a { color: inherit; }
 .prox-t { font-weight: 800; font-size: .88rem; line-height: 1.25; overflow-wrap: anywhere; }
 @media (max-width: 760px) { .mundo-cards { grid-template-columns: 1fr; } }
 
+/* enunciados dos exercícios */
+details.ex-item { display: block; }
+details.ex-item summary { display: grid; grid-template-columns: auto 1fr auto; gap: .6rem; align-items: center; cursor: pointer; list-style: none; font: 700 .92rem/1.3 var(--font-body); color: var(--ink); }
+details.ex-item summary::-webkit-details-marker { display: none; }
+.ex-enun { margin: .6rem 0 .5rem; font-size: .9rem; line-height: 1.5; color: var(--ink); white-space: pre-line; }
+.ex-res { font: 800 .85rem var(--font-body); background: var(--accent); color: var(--accent-ink); border: 0; border-radius: 10px; padding: .45rem .8rem; cursor: pointer; }
+
 /* tipografia: Nunito arredondada, em negrito nos títulos */
 h1, h2, h3, h4 { font-weight: 900; letter-spacing: -.01em; }
 em { font-style: normal; font-weight: 900; }
@@ -1246,6 +1253,27 @@ footer {
     });
   }
 
+  var ENUN = {};
+
+  /* Card de exercício: enunciado recolhível e botão para a resolução no vídeo */
+  function exCard(vid, n, nome, rotulo, key) {
+    var d = el("details", "ex-item");
+    var s = el("summary");
+    s.appendChild(el("span", "ex-n", "#" + n));
+    s.appendChild(el("span", "ex-t", nome));
+    s.appendChild(el("span", "ex-go", rotulo));
+    d.appendChild(s);
+    var info = ENUN[vid] || {};
+    d.appendChild(el("p", "ex-enun", info.enunciado || "Enunciado ainda não cadastrado."));
+    var b = el("button", "ex-res", "Ver resolução ▶");
+    b.type = "button";
+    b.dataset.key = key;
+    b.dataset.vid = vid;
+    b.dataset.start = String(info.resolucao || 0);
+    d.appendChild(b);
+    return d;
+  }
+
   function setAba(nome) {
     $("tabAulas").hidden = nome !== "aulas";
     $("tabLista").hidden = nome !== "lista";
@@ -1292,14 +1320,7 @@ footer {
     var lista = $("tabLista");
     lista.innerHTML = "";
     ex.forEach(function (x) {
-      var b = el("button", "ex-item");
-      b.type = "button";
-      b.dataset.key = x.key;
-      b.dataset.vid = x.id;
-      b.appendChild(el("span", "ex-n", "#" + x.n));
-      b.appendChild(el("span", "ex-t", x.nome));
-      b.appendChild(el("span", "ex-go", "Aula " + x.aulaN + " →"));
-      lista.appendChild(b);
+      lista.appendChild(exCard(x.id, x.n, x.nome, "Aula " + x.aulaN, x.key));
     });
     if (!ex.length) lista.appendChild(el("p", "muted-note", "Este curso não tem lista de exercícios."));
     $("tabListaBtn").hidden = ex.length === 0;
@@ -1311,6 +1332,10 @@ footer {
   function buildPython() {
     agrupar();
     renderMundoCards();
+    fetch("enunciados.json").then(function (r) { return r.ok ? r.json() : {}; }).then(function (j) {
+      ENUN = j || {};
+      if (!$("mundo").hidden) abrirMundo(MUNDO_ATUAL);
+    }).catch(function () { /* sem enunciados: segue sem eles */ });
     $("mundoCards").addEventListener("click", function (ev) {
       var c = ev.target.closest ? ev.target.closest("button.mundo-card") : null;
       if (c) abrirMundo(Number(c.dataset.mundo));
@@ -1324,8 +1349,8 @@ footer {
       if (b) openAula(b.dataset.key);
     });
     $("tabLista").addEventListener("click", function (ev) {
-      var b = ev.target.closest ? ev.target.closest("button.ex-item") : null;
-      if (b) openAula(b.dataset.key, b.dataset.vid);
+      var b = ev.target.closest ? ev.target.closest("button.ex-res") : null;
+      if (b) openAula(b.dataset.key, b.dataset.vid, Number(b.dataset.start));
     });
     $("aulaProx").addEventListener("click", function (ev) {
       var b = ev.target.closest ? ev.target.closest("button.prox-item") : null;
@@ -1340,14 +1365,14 @@ footer {
   }
 
   /* Toca o vídeo dentro da página, com o player incorporado do YouTube (sem chave de API). */
-  function tocar(id, pick, items) {
+  function tocar(id, pick, items, start) {
     items.forEach(function (x) { x.setAttribute("aria-pressed", x === pick ? "true" : "false"); });
     var box = pick.closest(".detail");
     var p = box && box.querySelector(".player");
     if (!p) return;
     p.innerHTML = "";
     var f = el("iframe");
-    f.src = "https://www.youtube-nocookie.com/embed/" + encodeURIComponent(id) + "?rel=0";
+    f.src = "https://www.youtube-nocookie.com/embed/" + encodeURIComponent(id) + "?rel=0" + (start ? "&start=" + Math.floor(start) : "");
     f.title = "Vídeo da aula";
     f.setAttribute("allow", "accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture");
     f.setAttribute("allowfullscreen", "");
@@ -1357,7 +1382,7 @@ footer {
   }
 
   /* Tela de uma aula: player e lista de vídeos no topo, próximas aulas no fim */
-  function openAula(k, vid) {
+  function openAula(k, vid, start) {
     var a = aulaByKey(k);
     if (!a) return;
     selected = k;
@@ -1407,12 +1432,7 @@ footer {
       var rl = el("ul", "rec-list");
       exs.forEach(function (o) {
         var li = el("li");
-        var b = el("button", "rec-item");
-        b.type = "button";
-        b.appendChild(el("span", "ex-n", "#" + o.x.n));
-        b.appendChild(el("span", "ex-t", o.x.nome));
-        b.addEventListener("click", function () { tocar(o.v[0], items[o.i], items); });
-        li.appendChild(b);
+        li.appendChild(exCard(o.v[0], o.x.n, o.x.nome, "Nesta aula", k));
         rl.appendChild(li);
       });
       topo.appendChild(rl);
@@ -1429,7 +1449,7 @@ footer {
 
     var foco = vid ? a.videos.findIndex(function (v) { return v[0] === vid; }) : 0;
     if (foco < 0) foco = 0;
-    if (a.videos.length) tocar(a.videos[foco][0], items[foco], items);
+    if (a.videos.length) tocar(a.videos[foco][0], items[foco], items, vid ? start : 0);
 
     var prox = $("aulaProx");
     prox.innerHTML = "";
