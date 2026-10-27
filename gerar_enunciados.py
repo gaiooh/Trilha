@@ -1,20 +1,24 @@
 # Gera enunciados.json com o enunciado de cada exercício e o segundo em que começa a resolução.
 #
-# Preparação (uma vez, no Prompt de Comando):
-#   pip install youtube-transcript-api
-#   Pegue uma chave gratuita em aistudio.google.com e rode:  set GEMINI_KEY=SUA_CHAVE
+# Preparação (uma vez):
+#   python -m pip install youtube-transcript-api
+#   Chave gratuita em aistudio.google.com, e no Prompt de Comando:
+#     set GEMINI_KEY=SUA_CHAVE
+#     set GEMINI_MODEL=gemini-flash-latest
 #
-# Uso (na pasta do site, onde está o index.html):
+# Uso (na pasta Trilha, onde está o index.html):
 #   python gerar_enunciados.py index.html
 #
-# Pode rodar de novo: os exercícios já feitos são pulados.
-import json, os, re, sys, time, urllib.request
+# Pode rodar quantas vezes quiser: os exercícios já prontos são pulados.
+# Se o YouTube bloquear temporariamente, o script para sozinho e salva o progresso.
+import json, os, random, re, sys, time, urllib.request, urllib.error
 from youtube_transcript_api import YouTubeTranscriptApi
 
 KEY = os.environ.get("GEMINI_KEY", "").strip()
-MODEL = os.environ.get("GEMINI_MODEL", "gemini-2.5-flash")
+MODEL = os.environ.get("GEMINI_MODEL", "gemini-flash-latest")
 HTML = sys.argv[1] if len(sys.argv) > 1 else "index.html"
 SAIDA = "enunciados.json"
+MAX_FALHAS_SEGUIDAS = 6
 
 if not KEY or KEY.startswith("SUA_"):
     sys.exit("Defina GEMINI_KEY com a sua chave real antes de rodar.")
@@ -46,37 +50,68 @@ Transcrição:
 __TRECHO__"""
 
 
+def legenda(vid):
+    """Tenta português/inglês; se não houver, pega qualquer legenda disponível."""
+    try:
+        return api.fetch(vid, languages=["pt", "pt-BR", "en"]).to_raw_data()
+    except Exception:
+        pass
+    lista = api.list(vid)
+    for t in lista:
+        try:
+            return t.fetch().to_raw_data()
+        except Exception:
+            continue
+    raise RuntimeError("sem legenda")
+
+
 def gemini(texto):
     url = "https://generativelanguage.googleapis.com/v1beta/models/%s:generateContent?key=%s" % (MODEL, KEY)
     body = json.dumps({
         "contents": [{"parts": [{"text": texto}]}],
         "generationConfig": {"responseMimeType": "application/json", "temperature": 0.2},
     }).encode("utf-8")
-    req = urllib.request.Request(url, data=body, headers={"content-type": "application/json"})
-    with urllib.request.urlopen(req, timeout=120) as r:
-        j = json.load(r)
-    return j["candidates"][0]["content"]["parts"][0]["text"]
+    for tentativa in range(3):
+        req = urllib.request.Request(url, data=body, headers={"content-type": "application/json"})
+        try:
+            with urllib.request.urlopen(req, timeout=120) as r:
+                j = json.load(r)
+            return j["candidates"][0]["content"]["parts"][0]["text"]
+        except urllib.error.HTTPError as e:
+            if e.code in (429, 500, 503) and tentativa < 2:
+                time.sleep(30 * (tentativa + 1))
+                continue
+            raise
 
 
-for i, (vid, titulo) in enumerate(videos.items(), 1):
-    if vid in out:
-        continue
+falhas_seguidas = 0
+pendentes = [v for v in videos if v not in out]
+print(len(pendentes), "faltam")
+
+for i, vid in enumerate(pendentes, 1):
+    titulo = videos[vid]
     try:
-        segs = api.fetch(vid, languages=["pt", "pt-BR", "en"]).to_raw_data()
+        segs = legenda(vid)
     except Exception as e:
-        print("  sem legenda:", vid, str(e)[:60])
+        falhas_seguidas += 1
+        print("  sem legenda:", vid, "|", titulo[:45])
+        if falhas_seguidas >= MAX_FALHAS_SEGUIDAS:
+            print("\nO YouTube bloqueou as legendas por enquanto. Espere 1 hora e rode de novo;")
+            print("o progresso já salvo fica guardado.")
+            break
+        time.sleep(random.uniform(15, 25))
         continue
-    linhas = []
-    for s in segs:
-        if s["start"] <= 900:
-            linhas.append("[%ds] %s" % (int(s["start"]), s["text"].replace("\n", " ")))
+
+    falhas_seguidas = 0
+    linhas = ["[%ds] %s" % (int(s["start"]), s["text"].replace("\n", " ")) for s in segs if s["start"] <= 900]
     prompt = PROMPT.replace("__TITULO__", titulo).replace("__TRECHO__", "\n".join(linhas))
     try:
         r = json.loads(gemini(prompt))
     except Exception as e:
         print("  falhou na IA:", vid, str(e)[:80])
-        time.sleep(10)
+        time.sleep(15)
         continue
+
     res = r.get("resolucao_segundo")
     out[vid] = {
         "enunciado": str(r.get("enunciado", "")).strip(),
@@ -85,6 +120,6 @@ for i, (vid, titulo) in enumerate(videos.items(), 1):
     print(i, titulo[:55], "ok")
     with open(SAIDA, "w", encoding="utf-8") as f:
         json.dump(out, f, ensure_ascii=False, indent=1)
-    time.sleep(4)
+    time.sleep(random.uniform(6, 10))
 
-print("salvo em", SAIDA, "| total:", len(out))
+print("salvo em", SAIDA, "| total pronto:", len(out), "de", len(videos))
